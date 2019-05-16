@@ -27,7 +27,7 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 	chip8.Initialize()
-	err := chip8.Load("roms/BC_TEST.ch8")
+	err := chip8.Load("roms/INVADERS")
 	if err != nil {
 		log.Fatal(err)
 	}
