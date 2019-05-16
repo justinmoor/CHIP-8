@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	width	= 64
-	height	= 32
-	scale	= 16
+	width  = 64
+	height = 32
+	scale  = 16
 )
 
 var chip8 *system.CHIP8
@@ -28,7 +28,7 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 	chip8.Initialize()
-	err := chip8.Load("roms/pong.ch8")
+	err := chip8.Load("roms/INVADERS")
 	if err != nil {
 		fmt.Println(err)
 	}

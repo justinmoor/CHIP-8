@@ -59,51 +59,135 @@ func (c *CHIP8) Cycle() {
 	case 0x0000:
 		switch c.opcode & 0x000F {
 		case 0x0000:
-			c.clearDisplay()
+			c.exec00E0()
 			break
 		case 0x000E:
-			c.pc = c.stack[c.sp]
-			c.sp--
+			c.exec00EE()
 			break
 		}
 	case 0x1000:
-		c.pc = c.opcode & 0x0FFF
+		c.exec1NNN()
 		break
 	case 0x2000:
-		c.stack[c.sp] = c.pc
-		c.sp++
-		c.pc = c.opcode & 0x0FFF
+		c.exec2NNN()
 		break
 	case 0x3000:
-		if uint16(c.v[c.opcode&0x0F00]) == c.opcode&0x00FF {
-			c.pc += 2
-		}
+		c.exec3XNN()
+		break
+	case 0x4000:
+		c.exec4XNN()
+		break
+	case 0x5000:
+		c.exec5XY0()
+		break
+	case 0x6000:
+		c.exec6XNN()
+		break
+	case 0x7000:
+		c.exec7XNN()
 		break
 	case 0x0004:
-		if c.v[(c.opcode&0x00F0)>>4] > (0xFF - c.v[(c.opcode&0x0F00)>>8]) {
-			c.v[0xF] = 1
-		} else {
-			c.v[0xF] = 0
-		}
-		c.v[(c.opcode&0x0F00)>>8] += c.v[(c.opcode&0x00F0)>>4]
-		c.pc += 2
+		c.exec8XY4()
 		break
 	case 0xA000:
-		c.i = c.opcode & 0x0FFF
-		c.pc += 2
+		c.execANNN()
 		break
 	case 0x0033:
-		c.memory[c.i] = c.v[(c.opcode&0x0F00)>>8] / 100
-		c.memory[c.i+1] = (c.v[(c.opcode&0x0F00)>>8] / 10) % 10
-		c.memory[c.i+2] = (c.v[(c.opcode&0x0F00)>>8] % 100) % 10
+		c.execFX33()
 		break
 	default:
-		fmt.Println("Unsupported")
+		//fmt.Println("Unsupported instruction")
 	}
+
+	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.opcode))
+	fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
 }
 
-func (c *CHIP8) clearDisplay() {
+func (c *CHIP8) exec00E0() {
+	fmt.Printf("Executing 00E0\n")
 	c.gfx = [64 * 32]byte{}
+	c.pc += 2
+}
+
+func (c *CHIP8) exec00EE() {
+	fmt.Printf("Executing 00EE\n")
+	c.pc = c.stack[c.sp]
+	c.sp--
+}
+
+func (c *CHIP8) exec1NNN() {
+	fmt.Printf("Executing 1NNN\n")
+	c.pc = c.opcode & 0x0FFF
+}
+
+func (c *CHIP8) exec2NNN() {
+	fmt.Printf("Executing 2NNN\n")
+	c.stack[c.sp] = c.pc
+	c.sp++
+	c.pc = c.opcode & 0x0FFF
+}
+
+func (c *CHIP8) exec3XNN() {
+	fmt.Printf("Executing 3XNN\n")
+	if uint16(c.v[(c.opcode>>8)&0x0F00]) == c.opcode&0x00FF {
+		c.pc += 4
+		return
+	}
+	c.pc += 2
+}
+
+func (c *CHIP8) exec4XNN() {
+	fmt.Printf("Executing 5XY0\n")
+	if uint16(c.v[c.opcode&0x0F00]) != c.opcode&0x00FF {
+		c.pc += 4
+		return
+	}
+	c.pc += 2
+}
+
+func (c *CHIP8) exec5XY0() {
+	fmt.Printf("Executing 5XY0\n")
+	if c.v[(c.opcode>>8)&0x0F00] == c.v[(c.opcode>>4)&0x00F0] {
+		c.pc += 4
+		return
+	}
+	c.pc += 2
+}
+
+func (c *CHIP8) exec6XNN() {
+	fmt.Printf("Executing 6XNN\n")
+	c.v[(c.opcode>>8)&0x0F00] = byte(c.opcode & 0x00FF)
+	c.pc += 2
+}
+
+func (c *CHIP8) exec7XNN() {
+	fmt.Println("Executing 7XNN")
+	c.v[(c.opcode>>8)&0x0F00] += byte(c.opcode & 0x00FF)
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY4() {
+	fmt.Printf("Executing 8XY4\n")
+	if c.v[(c.opcode&0x00F0)>>4] > (0xFF - c.v[(c.opcode&0x0F00)>>8]) {
+		c.v[0xF] = 1
+	} else {
+		c.v[0xF] = 0
+	}
+	c.v[(c.opcode&0x0F00)>>8] += c.v[(c.opcode&0x00F0)>>4]
+	c.pc += 2
+}
+
+func (c *CHIP8) execANNN() {
+	fmt.Printf("Executing ANNN\n")
+	c.i = c.opcode & 0x0FFF
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX33() {
+	c.memory[c.i] = c.v[(c.opcode&0x0F00)>>8] / 100
+	c.memory[c.i+1] = (c.v[(c.opcode&0x0F00)>>8] / 10) % 10
+	c.memory[c.i+2] = (c.v[(c.opcode&0x0F00)>>8] % 100) % 10
+	c.pc += 2
 }
 
 func (c *CHIP8) Load(romName string) error {
@@ -118,18 +202,17 @@ func (c *CHIP8) Load(romName string) error {
 		return err
 	}
 
-	bytes := make([]byte, stats.Size())
-	buffer := bufio.NewReader(rom)
-
-	if _, err = buffer.Read(bytes); err != nil {
+	reader := bufio.NewReader(rom)
+	buffer := make([]byte, stats.Size())
+	if _, err = reader.Read(buffer); err != nil {
 		return err
 	}
 
 	// read ROM into memory
-	for i := 0; i < len(bytes); i++ {
-		c.memory[i+0x200] = bytes[i]
-		hex := fmt.Sprintf("%x", c.memory[i+0x200])
-		fmt.Printf("%s\n", hex)
+	for i := 0; i < len(buffer); i++ {
+		c.memory[i+0x200] = buffer[i]
+		//hex := fmt.Sprintf("%x", c.memory[i+0x200])
+		//fmt.Printf("%s\n", hex)
 	}
 
 	return nil
