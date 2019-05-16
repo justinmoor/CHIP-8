@@ -19,14 +19,13 @@ type CHIP8 struct {
 }
 
 type cpu struct {
-	opcode  uint16 // opcode is 2 bytes
-	memory  [4096]byte
-	v       [16]byte // CPU registers
-	i       uint16   // index register
-	pc      uint16   // program counter
-	stack   [16]uint16
-	sp      uint16 // stackpointer
-	opcodes map[int]func()
+	opcode uint16 // opcode is 2 bytes
+	memory [4096]byte
+	v      [16]byte // CPU registers
+	i      uint16   // index register
+	pc     uint16   // program counter
+	stack  [16]uint16
+	sp     uint16 // stackpointer
 }
 
 func (c *CHIP8) Initialize() {
@@ -43,7 +42,7 @@ func (c *CHIP8) Initialize() {
 
 	// load font into memory
 	for i := 0; i < 0x50; i++ {
-		c.memory[i] = font[i]
+		c.memory[i] = Font[i]
 	}
 }
 
@@ -107,16 +106,26 @@ func (c *CHIP8) Cycle() {
 			break
 		case 0x0005:
 			c.exec8XY5()
+			break
 		case 0x0006:
 			c.exec8XY6()
+			break
+		case 0x0007:
+			c.exec8XY7()
+			break
+		case 0x000E:
+			c.exec8XYE()
+			break
 		}
 		break
-	case 0x0004:
-		c.exec8XY4()
+	case 0x9000:
+		c.exec9XY0()
 		break
 	case 0xA000:
 		c.execANNN()
 		break
+	case 0xB000:
+
 	case 0x0033:
 		c.execFX33()
 
@@ -129,13 +138,10 @@ func (c *CHIP8) Cycle() {
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
 }
 
-func (c *CHIP8) registerOperations() {
-	c.opcodes[0x000F] = c.exec8XY5
-}
-
 func (c *CHIP8) exec00E0() {
 	fmt.Printf("Executing 00E0\n")
 	c.gfx = [64 * 32]byte{}
+	c.DrawFlag = true
 	c.pc += 2
 }
 
@@ -244,8 +250,27 @@ func (c *CHIP8) exec8XY5() {
 
 func (c *CHIP8) exec8XY6() {
 	fmt.Printf("Executing 8XY6\n")
-	c.v[0xF] = c.v[(c.opcode&0x0F00)>>8] & 0x000F
+	c.v[0xF] = c.v[(c.opcode&0x0F00)>>8] & 0x0001
 	c.v[(c.opcode&0x0F00)>>8] >>= 1
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY7() {
+	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x00F0)>>8] - c.v[(c.opcode&0x0F00)>>8]
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XYE() {
+	c.v[0xF] = (c.v[(c.opcode&0x0F00)>>8] >> 7) & 0x0001
+	c.v[(c.opcode&0x0F00)>>8] <<= 1
+	c.pc += 2
+}
+
+func (c *CHIP8) exec9XY0() {
+	if c.v[(c.opcode&0x0F00)>>8] != c.v[(c.opcode&0x00F0)>>4] {
+		c.pc += 4
+		return
+	}
 	c.pc += 2
 }
 
@@ -286,6 +311,5 @@ func (c *CHIP8) Load(romName string) error {
 		//hex := fmt.Sprintf("%x", c.memory[i+0x200])
 		//fmt.Printf("%s\n", hex)
 	}
-
 	return nil
 }

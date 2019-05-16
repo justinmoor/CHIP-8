@@ -1,6 +1,7 @@
 package experimental
 
 import (
+	"CHIP-8/system"
 	"bufio"
 	"fmt"
 	"os"
@@ -11,6 +12,7 @@ var (
 	delayTimer int
 )
 
+// experimental to test with function pointers
 type CHIP8 struct {
 	cpu
 	gfx      [64 * 32]byte // display
@@ -19,14 +21,13 @@ type CHIP8 struct {
 }
 
 type cpu struct {
-	opcode  uint16 // opcode is 2 bytes
-	memory  [4096]byte
-	v       [16]byte // CPU registers
-	i       uint16   // index register
-	pc      uint16   // program counter
-	stack   [16]uint16
-	sp      uint16 // stackpointer
-	opcodes map[int]func()
+	opcode uint16 // opcode is 2 bytes
+	memory [4096]byte
+	v      [16]byte // CPU registers
+	i      uint16   // index register
+	pc     uint16   // program counter
+	stack  [16]uint16
+	sp     uint16 // stackpointer
 }
 
 func (c *CHIP8) Initialize() {
@@ -43,7 +44,7 @@ func (c *CHIP8) Initialize() {
 
 	// load font into memory
 	for i := 0; i < 0x50; i++ {
-		c.memory[i] = font[i]
+		c.memory[i] = system.Font[i]
 	}
 }
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"CHIP8/system"
+	"CHIP-8/system"
 	e "github.com/hajimehoshi/ebiten"
 	"log"
 )
@@ -27,7 +27,7 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 	chip8.Initialize()
-	err := chip8.Load("roms/INVADERS")
+	err := chip8.Load("roms/pong.ch8")
 	if err != nil {
 		log.Fatal(err)
 	}
