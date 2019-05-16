@@ -65,6 +65,7 @@ func (c *CHIP8) Cycle() {
 			c.exec00EE()
 			break
 		}
+		break
 	case 0x1000:
 		c.exec1NNN()
 		break
@@ -86,6 +87,29 @@ func (c *CHIP8) Cycle() {
 	case 0x7000:
 		c.exec7XNN()
 		break
+	case 0x8000:
+		switch c.opcode & 0x000F {
+		case 0x0000:
+			c.exec8XY0()
+			break
+		case 0x0001:
+			c.exec8XY1()
+			break
+		case 0x0002:
+			c.exec8XY2()
+			break
+		case 0x0003:
+			c.exec8XY3()
+			break
+		case 0x0004:
+			c.exec8XY4()
+			break
+		case 0x0005:
+			c.exec8XY5()
+		case 0x0006:
+			c.exec8XY6()
+		}
+		break
 	case 0x0004:
 		c.exec8XY4()
 		break
@@ -94,13 +118,14 @@ func (c *CHIP8) Cycle() {
 		break
 	case 0x0033:
 		c.execFX33()
+
 		break
 	default:
-		//fmt.Println("Unsupported instruction")
+		fmt.Println("Unsupported instruction")
 	}
 
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.opcode))
-	fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
+	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
 }
 
 func (c *CHIP8) exec00E0() {
@@ -129,7 +154,7 @@ func (c *CHIP8) exec2NNN() {
 
 func (c *CHIP8) exec3XNN() {
 	fmt.Printf("Executing 3XNN\n")
-	if uint16(c.v[(c.opcode>>8)&0x0F00]) == c.opcode&0x00FF {
+	if c.v[(c.opcode&0x0F00)>>8] == byte(c.opcode&0x00FF) {
 		c.pc += 4
 		return
 	}
@@ -138,7 +163,7 @@ func (c *CHIP8) exec3XNN() {
 
 func (c *CHIP8) exec4XNN() {
 	fmt.Printf("Executing 5XY0\n")
-	if uint16(c.v[c.opcode&0x0F00]) != c.opcode&0x00FF {
+	if c.v[(c.opcode&0x0F00)>>8] != byte(c.opcode&0x00FF) {
 		c.pc += 4
 		return
 	}
@@ -147,7 +172,7 @@ func (c *CHIP8) exec4XNN() {
 
 func (c *CHIP8) exec5XY0() {
 	fmt.Printf("Executing 5XY0\n")
-	if c.v[(c.opcode>>8)&0x0F00] == c.v[(c.opcode>>4)&0x00F0] {
+	if c.v[(c.opcode&0x0F00)>>8] == c.v[(c.opcode&0x00F0)>>4] {
 		c.pc += 4
 		return
 	}
@@ -156,13 +181,37 @@ func (c *CHIP8) exec5XY0() {
 
 func (c *CHIP8) exec6XNN() {
 	fmt.Printf("Executing 6XNN\n")
-	c.v[(c.opcode>>8)&0x0F00] = byte(c.opcode & 0x00FF)
+	c.v[(c.opcode&0x0F00)>>8] = byte(c.opcode & 0x00FF)
 	c.pc += 2
 }
 
 func (c *CHIP8) exec7XNN() {
 	fmt.Println("Executing 7XNN")
-	c.v[(c.opcode>>8)&0x0F00] += byte(c.opcode & 0x00FF)
+	c.v[(c.opcode&0x0F00)>>8] += byte(c.opcode & 0x00FF)
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY0() {
+	fmt.Printf("Executing 8XY0\n")
+	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x00F0)>>4]
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY1() {
+	fmt.Printf("Executing 8XY1\n")
+	c.v[(c.opcode>>8)&0x0F00] = c.v[(c.opcode&0x0F00)>>8] | c.v[(c.opcode&0x00F0)>>4]
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY2() {
+	fmt.Printf("Executing 8XY2\n")
+	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x0F00)>>8] & c.v[(c.opcode&0x00F0)>>4]
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY3() {
+	fmt.Printf("Executing 8XY3\n")
+	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x0F00)>>8] ^ c.v[(c.opcode&0x00F0)>>4]
 	c.pc += 2
 }
 
@@ -174,6 +223,24 @@ func (c *CHIP8) exec8XY4() {
 		c.v[0xF] = 0
 	}
 	c.v[(c.opcode&0x0F00)>>8] += c.v[(c.opcode&0x00F0)>>4]
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY5() {
+	fmt.Printf("Executing 8XY5\n")
+	if c.v[(c.opcode&0x00F0)>>4] > (0xFF - c.v[(c.opcode&0x0F00)>>8]) {
+		c.v[0xF] = 0
+	} else {
+		c.v[0xF] = 1
+	}
+	c.v[(c.opcode&0x0F00)>>8] -= c.v[(c.opcode&0x00F0)>>4]
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY6() {
+	fmt.Printf("Executing 8XY6\n")
+	c.v[0xF] = c.v[(c.opcode&0x0F00)>>8] & 0x000F
+	c.v[(c.opcode&0x0F00)>>8] >>= 1
 	c.pc += 2
 }
 
