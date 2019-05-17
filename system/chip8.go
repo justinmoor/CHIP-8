@@ -19,7 +19,7 @@ var (
 
 type CHIP8 struct {
 	cpu
-	gfx      [64 * 32]byte // display
+	Gfx      [64 * 32]byte // display
 	key      [16]byte      // current key state
 	DrawFlag bool
 }
@@ -39,7 +39,7 @@ func (c *CHIP8) Initialize() {
 	c.opcode = 0x00
 	c.i = 0x00
 	c.sp = 0x00
-	c.DrawFlag = true
+	c.DrawFlag = false
 
 	// clear all the memory
 	c.memory = [4096]byte{}
@@ -141,10 +141,9 @@ func (c *CHIP8) Cycle() {
 		break
 	case 0x0033:
 		c.execFX33()
-
 		break
 	default:
-		fmt.Println("Unsupported instruction")
+
 	}
 
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.opcode))
@@ -153,7 +152,7 @@ func (c *CHIP8) Cycle() {
 
 func (c *CHIP8) exec00E0() {
 	fmt.Printf("Executing 00E0\n")
-	c.gfx = [64 * 32]byte{}
+	c.Gfx = [64 * 32]byte{}
 	c.DrawFlag = true
 	c.pc += 2
 }
@@ -312,15 +311,30 @@ func (c *CHIP8) execCXNN() {
 }
 
 func (c *CHIP8) execDXYN() {
+	fmt.Println("Executing DXYN")
 	vx := c.v[(c.opcode&0x0F00)>>8]
 	vy := c.v[(c.opcode&0x00F0)>>4]
 	h := c.opcode & 0x000F
 	var pixel byte
 
-	for yl := uint16(0); yl < 8; yl++ {
+	c.v[0xF] = 0
+	for yl := uint16(0); yl < h; yl++ {
 		pixel = c.memory[c.i+yl]
+		for xl := uint16(0); xl < 8; xl++ {
+
+			if pixel&(0x80>>xl) != 0 {
+				if c.Gfx[(vx+byte(xl)+((vy+byte(yl))*64))] == 1 {
+					c.v[0xF] = 1
+				}
+
+				c.Gfx[vx+byte(xl)+((vy+byte(yl))*64)] ^= 1
+			}
+		}
 
 	}
+
+	c.DrawFlag = true
+	c.pc += 2
 }
 
 func (c *CHIP8) execFX33() {

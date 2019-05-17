@@ -1,8 +1,10 @@
 package main
 
 import (
-	"CHIP8/system"
+	"CHIP-8/system"
+	"fmt"
 	e "github.com/hajimehoshi/ebiten"
+	"image/color"
 	"log"
 )
 
@@ -12,9 +14,17 @@ var chip8 *system.CHIP8
 
 func run(screen *e.Image) error {
 	chip8.Cycle()
-
+	var y int
 	if chip8.DrawFlag {
-		//screen.renderstuff()
+		for x := 0; x < len(chip8.Gfx); x++ {
+			if x%64 == 0 {
+				y += 1
+			}
+			if chip8.Gfx[x] == 1 {
+				screen.Set(x, y, color.White)
+			}
+		}
+		fmt.Println(9)
 	}
 
 	return nil
@@ -23,7 +33,7 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 	chip8.Initialize()
-	err := chip8.Load("roms/BC_test.ch8")
+	err := chip8.Load("roms/pong.ch8")
 	if err != nil {
 		log.Fatal(err)
 	}
