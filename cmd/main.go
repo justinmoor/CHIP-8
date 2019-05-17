@@ -1,16 +1,12 @@
 package main
 
 import (
-	"CHIP-8/system"
+	"CHIP8/system"
 	e "github.com/hajimehoshi/ebiten"
 	"log"
 )
 
-const (
-	width  = 64
-	height = 32
-	scale  = 16
-)
+const scale = 16
 
 var chip8 *system.CHIP8
 
@@ -27,12 +23,12 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 	chip8.Initialize()
-	err := chip8.Load("roms/pong.ch8")
+	err := chip8.Load("roms/BC_test.ch8")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = e.Run(run, width, height, scale, "CHIP-8")
+	err = e.Run(run, system.Width, system.Height, scale, "CHIP-8")
 
 	if err != nil {
 		log.Fatal(err)

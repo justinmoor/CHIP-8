@@ -3,7 +3,13 @@ package system
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
+)
+
+const (
+	Width  = 64
+	Height = 32
 )
 
 var (
@@ -125,7 +131,14 @@ func (c *CHIP8) Cycle() {
 		c.execANNN()
 		break
 	case 0xB000:
-
+		c.execBNNN()
+		break
+	case 0xC000:
+		c.execCXNN()
+		break
+	case 0xD000:
+		c.execDXYN()
+		break
 	case 0x0033:
 		c.execFX33()
 
@@ -256,17 +269,20 @@ func (c *CHIP8) exec8XY6() {
 }
 
 func (c *CHIP8) exec8XY7() {
+	fmt.Println("Executing 8XY7")
 	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x00F0)>>8] - c.v[(c.opcode&0x0F00)>>8]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XYE() {
+	fmt.Println("Executing 8XYE")
 	c.v[0xF] = (c.v[(c.opcode&0x0F00)>>8] >> 7) & 0x0001
 	c.v[(c.opcode&0x0F00)>>8] <<= 1
 	c.pc += 2
 }
 
 func (c *CHIP8) exec9XY0() {
+	fmt.Println("Executing 9XY0")
 	if c.v[(c.opcode&0x0F00)>>8] != c.v[(c.opcode&0x00F0)>>4] {
 		c.pc += 4
 		return
@@ -278,6 +294,33 @@ func (c *CHIP8) execANNN() {
 	fmt.Printf("Executing ANNN\n")
 	c.i = c.opcode & 0x0FFF
 	c.pc += 2
+}
+
+func (c *CHIP8) execBNNN() {
+	fmt.Println("Executing BNNNN")
+	c.pc = (c.opcode & 0x0FFF) + uint16(c.v[0x000])
+}
+
+func (c *CHIP8) execCXNN() {
+	fmt.Println("Executing CXNN")
+	b, err := randomByte()
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.v[(c.opcode&0x0F00)>>8] = b & byte(c.opcode&0x00FF)
+	c.pc += 2
+}
+
+func (c *CHIP8) execDXYN() {
+	vx := c.v[(c.opcode&0x0F00)>>8]
+	vy := c.v[(c.opcode&0x00F0)>>4]
+	h := c.opcode & 0x000F
+	var pixel byte
+
+	for yl := uint16(0); yl < 8; yl++ {
+		pixel = c.memory[c.i+yl]
+
+	}
 }
 
 func (c *CHIP8) execFX33() {
@@ -312,4 +355,11 @@ func (c *CHIP8) Load(romName string) error {
 		//fmt.Printf("%s\n", hex)
 	}
 	return nil
+}
+
+func randomByte() (byte, error) {
+	b := make([]byte, 1)
+	_, err := rand.Read(b)
+
+	return b[0], err
 }
