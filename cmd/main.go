@@ -2,7 +2,6 @@ package main
 
 import (
 	"CHIP-8/system"
-	"fmt"
 	e "github.com/hajimehoshi/ebiten"
 	"image/color"
 	"log"
@@ -24,7 +23,6 @@ func run(screen *e.Image) error {
 				screen.Set(x, y, color.White)
 			}
 		}
-		fmt.Println(9)
 	}
 
 	return nil

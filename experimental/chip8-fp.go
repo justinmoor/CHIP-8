@@ -44,7 +44,7 @@ func (c *CHIP8) Initialize() {
 
 	// load font into memory
 	for i := 0; i < 0x50; i++ {
-		c.memory[i] = system.Font[i]
+		c.memory[i] = system.font[i]
 	}
 }
 
@@ -130,13 +130,10 @@ func (c *CHIP8) Cycle() {
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
 }
 
-func (c *CHIP8) registerOperations() {
-	c.opcodes[0x000F] = c.exec8XY5
-}
-
 func (c *CHIP8) exec00E0() {
 	fmt.Printf("Executing 00E0\n")
-	c.gfx = [64 * 32]byte{}
+	c.Gfx = [64 * 32]byte{}
+	c.DrawFlag = true
 	c.pc += 2
 }
 
@@ -245,8 +242,30 @@ func (c *CHIP8) exec8XY5() {
 
 func (c *CHIP8) exec8XY6() {
 	fmt.Printf("Executing 8XY6\n")
-	c.v[0xF] = c.v[(c.opcode&0x0F00)>>8] & 0x000F
+	c.v[0xF] = c.v[(c.opcode&0x0F00)>>8] & 0x0001
 	c.v[(c.opcode&0x0F00)>>8] >>= 1
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XY7() {
+	fmt.Println("Executing 8XY7")
+	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x00F0)>>8] - c.v[(c.opcode&0x0F00)>>8]
+	c.pc += 2
+}
+
+func (c *CHIP8) exec8XYE() {
+	fmt.Println("Executing 8XYE")
+	c.v[0xF] = (c.v[(c.opcode&0x0F00)>>8] >> 7) & 0x0001
+	c.v[(c.opcode&0x0F00)>>8] <<= 1
+	c.pc += 2
+}
+
+func (c *CHIP8) exec9XY0() {
+	fmt.Println("Executing 9XY0")
+	if c.v[(c.opcode&0x0F00)>>8] != c.v[(c.opcode&0x00F0)>>4] {
+		c.pc += 4
+		return
+	}
 	c.pc += 2
 }
 
@@ -256,7 +275,50 @@ func (c *CHIP8) execANNN() {
 	c.pc += 2
 }
 
+func (c *CHIP8) execBNNN() {
+	fmt.Println("Executing BNNNN")
+	c.pc = (c.opcode & 0x0FFF) + uint16(c.v[0x000])
+}
+
+func (c *CHIP8) execCXNN() {
+	fmt.Println("Executing CXNN")
+	b, err := randomByte()
+	if err != nil {
+		fmt.Println(err)
+	}
+	c.v[(c.opcode&0x0F00)>>8] = b & byte(c.opcode&0x00FF)
+	c.pc += 2
+}
+
+func (c *CHIP8) execDXYN() {
+	fmt.Println("Executing DXYN")
+	vx := c.v[(c.opcode&0x0F00)>>8]
+	vy := c.v[(c.opcode&0x00F0)>>4]
+	h := c.opcode & 0x000F
+	var pixel byte
+
+	c.v[0xF] = 0
+	for yl := uint16(0); yl < h; yl++ {
+		pixel = c.memory[c.i+yl]
+		for xl := uint16(0); xl < 8; xl++ {
+
+			if pixel&(0x80>>xl) != 0 {
+				if c.Gfx[(vx+byte(xl)+((vy+byte(yl))*64))] == 1 {
+					c.v[0xF] = 1
+				}
+
+				c.Gfx[vx+byte(xl)+((vy+byte(yl))*64)] ^= 1
+			}
+		}
+
+	}
+
+	c.DrawFlag = true
+	c.pc += 2
+}
+
 func (c *CHIP8) execFX33() {
+	fmt.Println("Executing FX33")
 	c.memory[c.i] = c.v[(c.opcode&0x0F00)>>8] / 100
 	c.memory[c.i+1] = (c.v[(c.opcode&0x0F00)>>8] / 10) % 10
 	c.memory[c.i+2] = (c.v[(c.opcode&0x0F00)>>8] % 100) % 10

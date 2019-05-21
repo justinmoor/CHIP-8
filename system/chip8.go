@@ -61,6 +61,12 @@ func (c *CHIP8) Cycle() {
 	c.opcode <<= 8
 	c.opcode |= uint16(c.memory[c.pc+1])
 
+	addr := c.opcode & 0x0FFF
+	nn := byte(c.opcode & 0x00FF)
+	n := byte(c.opcode & 0x000F)
+	x := byte((c.opcode & 0x0F00) >> 8)
+	y := byte((c.opcode & 0x00F0) >> 4)
+
 	switch c.opcode & 0xF000 {
 	case 0x0000:
 		switch c.opcode & 0x000F {
@@ -73,74 +79,74 @@ func (c *CHIP8) Cycle() {
 		}
 		break
 	case 0x1000:
-		c.exec1NNN()
+		c.exec1NNN(addr)
 		break
 	case 0x2000:
-		c.exec2NNN()
+		c.exec2NNN(addr)
 		break
 	case 0x3000:
-		c.exec3XNN()
+		c.exec3XNN(x, nn)
 		break
 	case 0x4000:
-		c.exec4XNN()
+		c.exec4XNN(x, nn)
 		break
 	case 0x5000:
-		c.exec5XY0()
+		c.exec5XY0(x, y)
 		break
 	case 0x6000:
-		c.exec6XNN()
+		c.exec6XNN(x, nn)
 		break
 	case 0x7000:
-		c.exec7XNN()
+		c.exec7XNN(x, nn)
 		break
 	case 0x8000:
 		switch c.opcode & 0x000F {
 		case 0x0000:
-			c.exec8XY0()
+			c.exec8XY0(x, y)
 			break
 		case 0x0001:
-			c.exec8XY1()
+			c.exec8XY1(x, y)
 			break
 		case 0x0002:
-			c.exec8XY2()
+			c.exec8XY2(x, y)
 			break
 		case 0x0003:
-			c.exec8XY3()
+			c.exec8XY3(x, y)
 			break
 		case 0x0004:
-			c.exec8XY4()
+			c.exec8XY4(x, y)
 			break
 		case 0x0005:
-			c.exec8XY5()
+			c.exec8XY5(x, y)
 			break
 		case 0x0006:
-			c.exec8XY6()
+			c.exec8XY6(x, y)
 			break
 		case 0x0007:
-			c.exec8XY7()
+			c.exec8XY7(x, y)
 			break
 		case 0x000E:
-			c.exec8XYE()
+			c.exec8XYE(x, y)
 			break
 		}
 		break
 	case 0x9000:
-		c.exec9XY0()
+		c.exec9XY0(x, y)
 		break
 	case 0xA000:
-		c.execANNN()
+		c.execANNN(addr)
 		break
 	case 0xB000:
-		c.execBNNN()
+		c.execBNNN(addr)
 		break
 	case 0xC000:
-		c.execCXNN()
+		c.execCXNN(x, nn)
 		break
 	case 0xD000:
-		c.execDXYN()
+		c.execDXYN(x, y, n)
 		break
 	case 0x0033:
-		c.execFX33()
+		c.execFX33(x)
 		break
 	default:
 
@@ -163,181 +169,181 @@ func (c *CHIP8) exec00EE() {
 	c.sp--
 }
 
-func (c *CHIP8) exec1NNN() {
+func (c *CHIP8) exec1NNN(addr uint16) {
 	fmt.Printf("Executing 1NNN\n")
-	c.pc = c.opcode & 0x0FFF
+	c.pc = addr
 }
 
-func (c *CHIP8) exec2NNN() {
+func (c *CHIP8) exec2NNN(addr uint16) {
 	fmt.Printf("Executing 2NNN\n")
 	c.stack[c.sp] = c.pc
 	c.sp++
-	c.pc = c.opcode & 0x0FFF
+	c.pc = addr
 }
 
-func (c *CHIP8) exec3XNN() {
+func (c *CHIP8) exec3XNN(x, nn byte) {
 	fmt.Printf("Executing 3XNN\n")
-	if c.v[(c.opcode&0x0F00)>>8] == byte(c.opcode&0x00FF) {
+	if c.v[x] == nn {
 		c.pc += 4
 		return
 	}
 	c.pc += 2
 }
 
-func (c *CHIP8) exec4XNN() {
+func (c *CHIP8) exec4XNN(x, nn byte) {
 	fmt.Printf("Executing 5XY0\n")
-	if c.v[(c.opcode&0x0F00)>>8] != byte(c.opcode&0x00FF) {
+	if c.v[x] != nn {
 		c.pc += 4
 		return
 	}
 	c.pc += 2
 }
 
-func (c *CHIP8) exec5XY0() {
+func (c *CHIP8) exec5XY0(x, y byte) {
 	fmt.Printf("Executing 5XY0\n")
-	if c.v[(c.opcode&0x0F00)>>8] == c.v[(c.opcode&0x00F0)>>4] {
+	if c.v[x] == c.v[y] {
 		c.pc += 4
 		return
 	}
 	c.pc += 2
 }
 
-func (c *CHIP8) exec6XNN() {
+func (c *CHIP8) exec6XNN(x, nn byte) {
 	fmt.Printf("Executing 6XNN\n")
-	c.v[(c.opcode&0x0F00)>>8] = byte(c.opcode & 0x00FF)
+	c.v[x] = nn
 	c.pc += 2
 }
 
-func (c *CHIP8) exec7XNN() {
+func (c *CHIP8) exec7XNN(x, nn byte) {
 	fmt.Println("Executing 7XNN")
-	c.v[(c.opcode&0x0F00)>>8] += byte(c.opcode & 0x00FF)
+	c.v[x] += nn
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY0() {
+func (c *CHIP8) exec8XY0(x, y byte) {
 	fmt.Printf("Executing 8XY0\n")
-	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x00F0)>>4]
+	c.v[x] = c.v[y]
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY1() {
+func (c *CHIP8) exec8XY1(x, y byte) {
 	fmt.Printf("Executing 8XY1\n")
-	c.v[(c.opcode>>8)&0x0F00] = c.v[(c.opcode&0x0F00)>>8] | c.v[(c.opcode&0x00F0)>>4]
+	c.v[x] |= c.v[y]
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY2() {
+func (c *CHIP8) exec8XY2(x, y byte) {
 	fmt.Printf("Executing 8XY2\n")
-	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x0F00)>>8] & c.v[(c.opcode&0x00F0)>>4]
+	c.v[x] &= c.v[y]
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY3() {
+func (c *CHIP8) exec8XY3(x, y byte) {
 	fmt.Printf("Executing 8XY3\n")
-	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x0F00)>>8] ^ c.v[(c.opcode&0x00F0)>>4]
+	c.v[x] ^= c.v[y]
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY4() {
+func (c *CHIP8) exec8XY4(x, y byte) {
 	fmt.Printf("Executing 8XY4\n")
-	if c.v[(c.opcode&0x00F0)>>4] > (0xFF - c.v[(c.opcode&0x0F00)>>8]) {
+	if c.v[y] > (0xFF - c.v[y]) {
 		c.v[0xF] = 1
 	} else {
 		c.v[0xF] = 0
 	}
-	c.v[(c.opcode&0x0F00)>>8] += c.v[(c.opcode&0x00F0)>>4]
+	c.v[x] += c.v[y]
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY5() {
+func (c *CHIP8) exec8XY5(x, y byte) {
 	fmt.Printf("Executing 8XY5\n")
-	if c.v[(c.opcode&0x00F0)>>4] > (0xFF - c.v[(c.opcode&0x0F00)>>8]) {
+	if c.v[y] > (0xFF - c.v[x]) {
 		c.v[0xF] = 0
 	} else {
 		c.v[0xF] = 1
 	}
-	c.v[(c.opcode&0x0F00)>>8] -= c.v[(c.opcode&0x00F0)>>4]
+	c.v[x] -= c.v[y]
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY6() {
+//TODO: probably not correct
+func (c *CHIP8) exec8XY6(x, y byte) {
 	fmt.Printf("Executing 8XY6\n")
-	c.v[0xF] = c.v[(c.opcode&0x0F00)>>8] & 0x0001
-	c.v[(c.opcode&0x0F00)>>8] >>= 1
+	c.v[0xF] = c.v[x] & 0x0001
+	c.v[x] >>= 1
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XY7() {
+func (c *CHIP8) exec8XY7(x, y byte) {
 	fmt.Println("Executing 8XY7")
-	c.v[(c.opcode&0x0F00)>>8] = c.v[(c.opcode&0x00F0)>>8] - c.v[(c.opcode&0x0F00)>>8]
+	c.v[x] = c.v[y] - c.v[x]
 	c.pc += 2
 }
 
-func (c *CHIP8) exec8XYE() {
+func (c *CHIP8) exec8XYE(x, y byte) {
 	fmt.Println("Executing 8XYE")
-	c.v[0xF] = (c.v[(c.opcode&0x0F00)>>8] >> 7) & 0x0001
-	c.v[(c.opcode&0x0F00)>>8] <<= 1
+	c.v[0xF] = (c.v[x] >> 7) & 0x0001
+	c.v[x] <<= 1
 	c.pc += 2
 }
 
-func (c *CHIP8) exec9XY0() {
+func (c *CHIP8) exec9XY0(x, y byte) {
 	fmt.Println("Executing 9XY0")
-	if c.v[(c.opcode&0x0F00)>>8] != c.v[(c.opcode&0x00F0)>>4] {
+	if c.v[x] != c.v[y] {
 		c.pc += 4
 		return
 	}
 	c.pc += 2
 }
 
-func (c *CHIP8) execANNN() {
+func (c *CHIP8) execANNN(addr uint16) {
 	fmt.Printf("Executing ANNN\n")
-	c.i = c.opcode & 0x0FFF
+	c.i = addr
 	c.pc += 2
 }
 
-func (c *CHIP8) execBNNN() {
+func (c *CHIP8) execBNNN(addr uint16) {
 	fmt.Println("Executing BNNNN")
-	c.pc = (c.opcode & 0x0FFF) + uint16(c.v[0x000])
+	c.pc = addr + uint16(c.v[0x0000])
 }
 
-func (c *CHIP8) execCXNN() {
+func (c *CHIP8) execCXNN(x, nn byte) {
 	fmt.Println("Executing CXNN")
 	b, err := randomByte()
 	if err != nil {
 		fmt.Println(err)
 	}
-	c.v[(c.opcode&0x0F00)>>8] = b & byte(c.opcode&0x00FF)
+	c.v[x] = b & nn
 	c.pc += 2
 }
 
-func (c *CHIP8) execDXYN() {
+func (c *CHIP8) execDXYN(x, y, n byte) {
 	fmt.Println("Executing DXYN")
-	vx := c.v[(c.opcode&0x0F00)>>8]
-	vy := c.v[(c.opcode&0x00F0)>>4]
-	h := c.opcode & 0x000F
+	vx := c.v[x]
+	vy := c.v[y]
 	var pixel byte
 
 	c.v[0xF] = 0
-	for yl := uint16(0); yl < h; yl++ {
-		pixel = c.memory[c.i+yl]
-		for xl := uint16(0); xl < 8; xl++ {
+	for yl := byte(0); yl < n; yl++ {
+		pixel = c.memory[c.i+uint16(yl)]
+		for xl := byte(0); xl < 8; xl++ {
 
-			if pixel&(0x80>>xl) != 0 {
-				if c.Gfx[(vx+byte(xl)+((vy+byte(yl))*64))] == 1 {
+			if (pixel & (0x80 >> xl)) != 0 {
+				if c.Gfx[(vx+xl+((vy+yl)*64))] == 1 {
 					c.v[0xF] = 1
 				}
 
-				c.Gfx[vx+byte(xl)+((vy+byte(yl))*64)] ^= 1
+				c.Gfx[(vx+xl)+((vy+yl)*64)] ^= 1
 			}
 		}
-
 	}
 
 	c.DrawFlag = true
 	c.pc += 2
 }
 
-func (c *CHIP8) execFX33() {
+func (c *CHIP8) execFX33(x byte) {
+	fmt.Println("Executing FX33")
 	c.memory[c.i] = c.v[(c.opcode&0x0F00)>>8] / 100
 	c.memory[c.i+1] = (c.v[(c.opcode&0x0F00)>>8] / 10) % 10
 	c.memory[c.i+2] = (c.v[(c.opcode&0x0F00)>>8] % 100) % 10
