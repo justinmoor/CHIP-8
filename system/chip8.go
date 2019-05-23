@@ -15,23 +15,24 @@ const (
 var (
 	soundTimer int
 	delayTimer int
+	key        chan byte
 )
 
 type CHIP8 struct {
 	cpu
-	Gfx      [64 * 32]byte // display
-	key      [16]byte      // current key state
+	Gfx      [Height * Width]byte // display
+	key      [16]byte             // current key state
 	DrawFlag bool
 }
 
 type cpu struct {
-	opcode uint16 // opcode is 2 bytes
-	memory [4096]byte
-	v      [16]byte // CPU registers
-	i      uint16   // index register
-	pc     uint16   // program counter
-	stack  [16]uint16
-	sp     uint16 // stackpointer
+	opcode uint16     // opcode is 2 bytes
+	memory [4096]byte // RAM
+	v      [16]byte   // CPU registers
+	i      uint16     // index register
+	pc     uint16     // program counter
+	stack  [16]uint16 // stack
+	sp     uint16     // stackpointer
 }
 
 func (c *CHIP8) Initialize() {
@@ -145,6 +146,23 @@ func (c *CHIP8) Cycle() {
 	case 0xD000:
 		c.execDXYN(x, y, n)
 		break
+	case 0xE000:
+		switch c.opcode & 0x00FF {
+		case 0x009E:
+			c.execEX9E(x)
+			break
+		case 0x00A1:
+			c.execEXA1(x)
+			break
+		}
+		break
+	case 0xF000:
+		switch c.opcode & 0x0FF {
+		case 0x0007:
+			c.execFX07(x)
+			break
+		}
+		break
 	case 0x0033:
 		c.execFX33(x)
 		break
@@ -152,8 +170,27 @@ func (c *CHIP8) Cycle() {
 
 	}
 
+	//if c.DrawFlag {
+	//	c.debugDraw()
+	//}
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.opcode))
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
+}
+
+func (c *CHIP8) debugDraw() {
+	for x := 0; x < len(c.Gfx); x++ {
+		if x%64 == 0 {
+			fmt.Println()
+		}
+
+		if c.Gfx[x] == 1 {
+			fmt.Print("1")
+		} else {
+			fmt.Print("0")
+		}
+	}
+
+	fmt.Println()
 }
 
 func (c *CHIP8) exec00E0() {
@@ -309,10 +346,7 @@ func (c *CHIP8) execBNNN(addr uint16) {
 
 func (c *CHIP8) execCXNN(x, nn byte) {
 	fmt.Println("Executing CXNN")
-	b, err := randomByte()
-	if err != nil {
-		fmt.Println(err)
-	}
+	b := randomByte()
 	c.v[x] = b & nn
 	c.pc += 2
 }
@@ -324,9 +358,9 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 	var pixel byte
 
 	c.v[0xF] = 0
-	for yl := byte(0); yl < n; yl++ {
+	for yl := byte(0); yl < n; yl++ { // n = height
 		pixel = c.memory[c.i+uint16(yl)]
-		for xl := byte(0); xl < 8; xl++ {
+		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
 
 			if (pixel & (0x80 >> xl)) != 0 {
 				if c.Gfx[(vx+xl+((vy+yl)*64))] == 1 {
@@ -342,12 +376,38 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 	c.pc += 2
 }
 
+func (c *CHIP8) execEX9E(x byte) {
+	fmt.Println("Executing EX9E")
+	if c.key[c.v[x]] != 0 {
+		c.pc += 4
+		return
+	}
+	c.pc += 2
+}
+
+func (c *CHIP8) execEXA1(x byte) {
+	fmt.Println("Executing EXA1")
+	if c.key[c.v[x]] == 0 {
+		c.pc += 4
+		return
+	}
+	c.pc += 2
+}
+
 func (c *CHIP8) execFX33(x byte) {
 	fmt.Println("Executing FX33")
-	c.memory[c.i] = c.v[(c.opcode&0x0F00)>>8] / 100
-	c.memory[c.i+1] = (c.v[(c.opcode&0x0F00)>>8] / 10) % 10
-	c.memory[c.i+2] = (c.v[(c.opcode&0x0F00)>>8] % 100) % 10
+	c.memory[c.i] = c.v[x] / 100
+	c.memory[c.i+1] = (c.v[x] / 10) % 10
+	c.memory[c.i+2] = (c.v[x] % 100) % 10
 	c.pc += 2
+}
+func (c *CHIP8) execFX07(x byte) {
+	delayTimer = int(c.v[x])
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX0A(x byte) {
+	c.v[x] = <-key
 }
 
 func (c *CHIP8) Load(romName string) error {
@@ -377,9 +437,8 @@ func (c *CHIP8) Load(romName string) error {
 	return nil
 }
 
-func randomByte() (byte, error) {
+func randomByte() byte {
 	b := make([]byte, 1)
-	_, err := rand.Read(b)
-
-	return b[0], err
+	rand.Read(b)
+	return b[0]
 }

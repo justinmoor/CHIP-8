@@ -13,18 +13,23 @@ var chip8 *system.CHIP8
 
 func run(screen *e.Image) error {
 	chip8.Cycle()
+
+	var x int
 	var y int
+
 	if chip8.DrawFlag {
-		for x := 0; x < len(chip8.Gfx); x++ {
-			if x%64 == 0 {
+		for i := 0; i < len(chip8.Gfx); i++ {
+			if i%64 == 0 {
+				x = 0
 				y += 1
 			}
-			if chip8.Gfx[x] == 1 {
+			if chip8.Gfx[i] == 1 {
 				screen.Set(x, y, color.White)
 			}
+			x++
 		}
+		//chip8.DrawFlag = false
 	}
-
 	return nil
 }
 
