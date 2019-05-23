@@ -20,8 +20,8 @@ var (
 
 type CHIP8 struct {
 	cpu
-	Gfx      [Height * Width]byte // display
-	key      [16]byte             // current key state
+	Gfx      [Height][Width]byte // display
+	key      [16]byte            // current key state
 	DrawFlag bool
 }
 
@@ -177,25 +177,25 @@ func (c *CHIP8) Cycle() {
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
 }
 
-func (c *CHIP8) debugDraw() {
-	for x := 0; x < len(c.Gfx); x++ {
-		if x%64 == 0 {
-			fmt.Println()
-		}
-
-		if c.Gfx[x] == 1 {
-			fmt.Print("1")
-		} else {
-			fmt.Print("0")
-		}
-	}
-
-	fmt.Println()
-}
+//func (c *CHIP8) debugDraw() {
+//	for x := 0; x < len(c.Gfx); x++ {
+//		if x%64 == 0 {
+//			fmt.Println()
+//		}
+//
+//		if c.Gfx[x] == 1 {
+//			fmt.Print("1")
+//		} else {
+//			fmt.Print("0")
+//		}
+//	}
+//
+//	fmt.Println()
+//}
 
 func (c *CHIP8) exec00E0() {
 	fmt.Printf("Executing 00E0\n")
-	c.Gfx = [64 * 32]byte{}
+	c.Gfx = [Height][Width]byte{}
 	c.DrawFlag = true
 	c.pc += 2
 }
@@ -363,11 +363,12 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
 
 			if (pixel & (0x80 >> xl)) != 0 {
-				if c.Gfx[(vx+xl+((vy+yl)*64))] == 1 {
+				if c.Gfx[(vy+yl)%Height][(vx+xl)%Width] == 1 {
 					c.v[0xF] = 1
 				}
 
-				c.Gfx[(vx+xl)+((vy+yl)*64)] ^= 1
+				c.Gfx[(y + yl)][(vx + xl)] ^= 1
+				//c.Gfx[vx+xl+((vy+yl)*64)] ^= 1
 			}
 		}
 	}
@@ -375,6 +376,31 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 	c.DrawFlag = true
 	c.pc += 2
 }
+
+//func (c *CHIP8) execDXYN(x, y, n byte) {
+//	fmt.Println("Executing DXYN")
+//	vx := c.v[x]
+//	vy := c.v[y]
+//	var pixel byte
+//
+//	c.v[0xF] = 0
+//	for yl := byte(0); yl < n; yl++ { // n = height
+//		pixel = c.memory[c.i+uint16(yl)]
+//		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
+//
+//			if (pixel & (0x80 >> xl)) != 0 {
+//				if c.Gfx[(vx+xl+((vy+yl)*64))] == 1 {
+//					c.v[0xF] = 1
+//				}
+//
+//				c.Gfx[vx+xl+((vy+yl)*64)] ^= 1
+//			}
+//		}
+//	}
+//
+//	c.DrawFlag = true
+//	c.pc += 2
+//}
 
 func (c *CHIP8) execEX9E(x byte) {
 	fmt.Println("Executing EX9E")
