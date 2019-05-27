@@ -41,14 +41,11 @@ var chip8 *system.CHIP8
 func run(screen *e.Image) error {
 	chip8.Cycle()
 
-	//var x = 0
-	//var y = 0
-
 	if chip8.DrawFlag {
 		for x := 0; x < system.Width; x++ {
 			for y := 0; y < system.Height; y++ {
 				if chip8.Gfx[y][x] == 1 {
-					screen.Set(x, y, color.Black)
+					screen.Set(x, y, color.White)
 				}
 			}
 		}

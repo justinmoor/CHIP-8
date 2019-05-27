@@ -366,41 +366,13 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 				if c.Gfx[(vy+yl)%Height][(vx+xl)%Width] == 1 {
 					c.v[0xF] = 1
 				}
-
 				c.Gfx[(y + yl)][(vx + xl)] ^= 1
-				//c.Gfx[vx+xl+((vy+yl)*64)] ^= 1
 			}
 		}
 	}
-
 	c.DrawFlag = true
 	c.pc += 2
 }
-
-//func (c *CHIP8) execDXYN(x, y, n byte) {
-//	fmt.Println("Executing DXYN")
-//	vx := c.v[x]
-//	vy := c.v[y]
-//	var pixel byte
-//
-//	c.v[0xF] = 0
-//	for yl := byte(0); yl < n; yl++ { // n = height
-//		pixel = c.memory[c.i+uint16(yl)]
-//		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
-//
-//			if (pixel & (0x80 >> xl)) != 0 {
-//				if c.Gfx[(vx+xl+((vy+yl)*64))] == 1 {
-//					c.v[0xF] = 1
-//				}
-//
-//				c.Gfx[vx+xl+((vy+yl)*64)] ^= 1
-//			}
-//		}
-//	}
-//
-//	c.DrawFlag = true
-//	c.pc += 2
-//}
 
 func (c *CHIP8) execEX9E(x byte) {
 	fmt.Println("Executing EX9E")
