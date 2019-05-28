@@ -35,7 +35,7 @@ type cpu struct {
 
 func (c *CHIP8) Run(rom string) error {
 	c.initialize()
-	if err := c.Load(rom); err != nil {
+	if err := c.load(rom); err != nil {
 		return err
 	}
 
@@ -508,6 +508,7 @@ func (c *CHIP8) execFX55(x byte) {
 	for i := byte(0); i < x; i++ {
 		c.memory[c.i+uint16(i)] = c.v[i]
 	}
+	c.i += uint16(x) + 1
 	c.pc += 2
 }
 
@@ -516,10 +517,11 @@ func (c *CHIP8) execFX65(x byte) {
 	for i := byte(0); i < x; i++ {
 		c.v[i] = c.memory[c.i+uint16(i)]
 	}
+	c.i += uint16(x) + 1
 	c.pc += 2
 }
 
-func (c *CHIP8) Load(romName string) error {
+func (c *CHIP8) load(romName string) error {
 	rom, err := os.Open(romName)
 	if err != nil {
 		return err

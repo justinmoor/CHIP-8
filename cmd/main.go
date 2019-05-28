@@ -51,5 +51,4 @@ func main() {
 	if err := e.Run(run, system.Width, system.Height, scale, "CHIP-8"); err != nil {
 		log.Fatal(err)
 	}
-
 }
