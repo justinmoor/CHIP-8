@@ -12,17 +12,15 @@ const (
 	Height = 32
 )
 
-var (
-	soundTimer int
-	delayTimer int
-	key        chan byte
-)
-
 type CHIP8 struct {
 	cpu
-	Gfx      [Height][Width]byte // display
-	key      [16]byte            // current key state
-	DrawFlag bool
+	ScreenState chan [Height][Width]byte
+	KeyPress    chan uint16
+	gfx         [Height][Width]byte // display
+	keys        [16]byte            // current key state
+	drawFlag    bool
+	delayTimer  byte
+	soundTimer  byte
 }
 
 type cpu struct {
@@ -35,21 +33,57 @@ type cpu struct {
 	sp     uint16     // stackpointer
 }
 
-func (c *CHIP8) Initialize() {
+func (c *CHIP8) Run(rom string) error {
+	c.initialize()
+	if err := c.Load(rom); err != nil {
+		return err
+	}
+
+	go func() {
+		for {
+			c.cycle()
+
+			if c.drawFlag {
+				select {
+				case c.ScreenState <- c.gfx:
+					break
+				default:
+					break
+				}
+			}
+		}
+	}()
+
+	return nil
+}
+
+func (c *CHIP8) SendKeyPress(key uint16) {
+	select {
+	case c.KeyPress <- key:
+		break
+	default:
+		break
+	}
+}
+
+func (c *CHIP8) initialize() {
 	c.pc = 0x200 // = 512: initial point where a program will start
 	c.opcode = 0x00
 	c.i = 0x00
 	c.sp = 0x00
-	c.DrawFlag = false
+	c.drawFlag = false
 
 	// clear all the memory
 	c.memory = [4096]byte{}
 	c.v = [16]byte{}
 	c.stack = [16]uint16{}
 
+	c.ScreenState = make(chan [Height][Width]byte)
+	c.KeyPress = make(chan uint16)
+
 	// load font into memory
 	for i := 0; i < 0x50; i++ {
-		c.memory[i] = Font[i]
+		c.memory[i] = font[i]
 	}
 }
 
@@ -57,7 +91,7 @@ func (c *CHIP8) Initialize() {
 // decode opcode
 // execude opcode
 // update timers
-func (c *CHIP8) Cycle() {
+func (c *CHIP8) cycle() {
 	c.opcode = uint16(c.memory[c.pc])
 	c.opcode <<= 8
 	c.opcode |= uint16(c.memory[c.pc+1])
@@ -76,6 +110,9 @@ func (c *CHIP8) Cycle() {
 			break
 		case 0x000E:
 			c.exec00EE()
+			break
+		default:
+			fmt.Println("0000: Unsupported opcode")
 			break
 		}
 		break
@@ -129,6 +166,9 @@ func (c *CHIP8) Cycle() {
 		case 0x000E:
 			c.exec8XYE(x, y)
 			break
+		default:
+			fmt.Println("8000: Unsupported opcode")
+			break
 		}
 		break
 	case 0x9000:
@@ -160,6 +200,33 @@ func (c *CHIP8) Cycle() {
 		switch c.opcode & 0x0FF {
 		case 0x0007:
 			c.execFX07(x)
+			break
+		case 0x000A:
+			c.execFX0A(x)
+			break
+		case 0x0015:
+			c.execFX15(x)
+			break
+		case 0x0018:
+			c.execFX18(x)
+			break
+		case 0x001E:
+			c.execFX1E(x)
+			break
+		case 0x0029:
+			c.execFX29(x)
+			break
+		case 0x0033:
+			c.execFX33(x)
+			break
+		case 0x0055:
+			c.execFX55(x)
+			break
+		case 0x0065:
+			c.execFX65(x)
+			break
+		default:
+			//fmt.Println("FX00: Unsupported opcode")
 			break
 		}
 		break
@@ -194,32 +261,32 @@ func (c *CHIP8) Cycle() {
 //}
 
 func (c *CHIP8) exec00E0() {
-	fmt.Printf("Executing 00E0\n")
-	c.Gfx = [Height][Width]byte{}
-	c.DrawFlag = true
+	fmt.Println("Executing 00E0")
+	c.gfx = [Height][Width]byte{}
+	c.drawFlag = true
 	c.pc += 2
 }
 
 func (c *CHIP8) exec00EE() {
-	fmt.Printf("Executing 00EE\n")
-	c.pc = c.stack[c.sp]
+	fmt.Println("Executing 00EE")
 	c.sp--
+	c.pc = c.stack[c.sp]
 }
 
 func (c *CHIP8) exec1NNN(addr uint16) {
-	fmt.Printf("Executing 1NNN\n")
+	fmt.Println("Executing 1NNN")
 	c.pc = addr
 }
 
 func (c *CHIP8) exec2NNN(addr uint16) {
-	fmt.Printf("Executing 2NNN\n")
-	c.stack[c.sp] = c.pc
+	fmt.Println("Executing 2NNN")
+	c.stack[c.sp] = c.pc + 2
 	c.sp++
 	c.pc = addr
 }
 
 func (c *CHIP8) exec3XNN(x, nn byte) {
-	fmt.Printf("Executing 3XNN\n")
+	fmt.Println("Executing 3XNN")
 	if c.v[x] == nn {
 		c.pc += 4
 		return
@@ -228,7 +295,7 @@ func (c *CHIP8) exec3XNN(x, nn byte) {
 }
 
 func (c *CHIP8) exec4XNN(x, nn byte) {
-	fmt.Printf("Executing 5XY0\n")
+	fmt.Println("Executing 5XY0")
 	if c.v[x] != nn {
 		c.pc += 4
 		return
@@ -237,7 +304,7 @@ func (c *CHIP8) exec4XNN(x, nn byte) {
 }
 
 func (c *CHIP8) exec5XY0(x, y byte) {
-	fmt.Printf("Executing 5XY0\n")
+	fmt.Println("Executing 5XY0")
 	if c.v[x] == c.v[y] {
 		c.pc += 4
 		return
@@ -246,7 +313,7 @@ func (c *CHIP8) exec5XY0(x, y byte) {
 }
 
 func (c *CHIP8) exec6XNN(x, nn byte) {
-	fmt.Printf("Executing 6XNN\n")
+	fmt.Println("Executing 6XNN")
 	c.v[x] = nn
 	c.pc += 2
 }
@@ -258,31 +325,31 @@ func (c *CHIP8) exec7XNN(x, nn byte) {
 }
 
 func (c *CHIP8) exec8XY0(x, y byte) {
-	fmt.Printf("Executing 8XY0\n")
+	fmt.Println("Executing 8XY0")
 	c.v[x] = c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY1(x, y byte) {
-	fmt.Printf("Executing 8XY1\n")
+	fmt.Println("Executing 8XY1")
 	c.v[x] |= c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY2(x, y byte) {
-	fmt.Printf("Executing 8XY2\n")
+	fmt.Println("Executing 8XY2")
 	c.v[x] &= c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY3(x, y byte) {
-	fmt.Printf("Executing 8XY3\n")
+	fmt.Println("Executing 8XY3")
 	c.v[x] ^= c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY4(x, y byte) {
-	fmt.Printf("Executing 8XY4\n")
+	fmt.Println("Executing 8XY4")
 	if c.v[y] > (0xFF - c.v[y]) {
 		c.v[0xF] = 1
 	} else {
@@ -293,7 +360,7 @@ func (c *CHIP8) exec8XY4(x, y byte) {
 }
 
 func (c *CHIP8) exec8XY5(x, y byte) {
-	fmt.Printf("Executing 8XY5\n")
+	fmt.Println("Executing 8XY5")
 	if c.v[y] > (0xFF - c.v[x]) {
 		c.v[0xF] = 0
 	} else {
@@ -305,7 +372,7 @@ func (c *CHIP8) exec8XY5(x, y byte) {
 
 //TODO: probably not correct
 func (c *CHIP8) exec8XY6(x, y byte) {
-	fmt.Printf("Executing 8XY6\n")
+	fmt.Println("Executing 8XY6")
 	c.v[0xF] = c.v[x] & 0x0001
 	c.v[x] >>= 1
 	c.pc += 2
@@ -334,7 +401,7 @@ func (c *CHIP8) exec9XY0(x, y byte) {
 }
 
 func (c *CHIP8) execANNN(addr uint16) {
-	fmt.Printf("Executing ANNN\n")
+	fmt.Println("Executing ANNN")
 	c.i = addr
 	c.pc += 2
 }
@@ -363,20 +430,20 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
 
 			if (pixel & (0x80 >> xl)) != 0 {
-				if c.Gfx[(vy+yl)%Height][(vx+xl)%Width] == 1 {
+				if c.gfx[(vy+yl)%Height][(vx+xl)%Width] == 1 {
 					c.v[0xF] = 1
 				}
-				c.Gfx[(y + yl)][(vx + xl)] ^= 1
+				c.gfx[(y + yl)][(vx + xl)] ^= 1
 			}
 		}
 	}
-	c.DrawFlag = true
+	c.drawFlag = true
 	c.pc += 2
 }
 
 func (c *CHIP8) execEX9E(x byte) {
 	fmt.Println("Executing EX9E")
-	if c.key[c.v[x]] != 0 {
+	if c.keys[c.v[x]] != 0 {
 		c.pc += 4
 		return
 	}
@@ -385,10 +452,46 @@ func (c *CHIP8) execEX9E(x byte) {
 
 func (c *CHIP8) execEXA1(x byte) {
 	fmt.Println("Executing EXA1")
-	if c.key[c.v[x]] == 0 {
+	if c.keys[c.v[x]] == 0 {
 		c.pc += 4
 		return
 	}
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX07(x byte) {
+	fmt.Println("Executing FX07")
+	c.v[x] = c.delayTimer
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX0A(x byte) {
+	fmt.Println("Executing FX0A")
+	c.v[x] = c.keys[<-c.KeyPress]
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX15(x byte) {
+	fmt.Println("Executing FX15")
+	c.delayTimer = c.v[x]
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX18(x byte) {
+	fmt.Println("Executing FX18")
+	c.soundTimer = c.v[x]
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX1E(x byte) {
+	fmt.Println("Executing FX1E")
+	c.i += uint16(c.v[x])
+	c.pc += 2
+}
+
+func (c *CHIP8) execFX29(x byte) {
+	fmt.Println("Executing FX29")
+	c.i = uint16(font[c.v[x]])
 	c.pc += 2
 }
 
@@ -399,13 +502,21 @@ func (c *CHIP8) execFX33(x byte) {
 	c.memory[c.i+2] = (c.v[x] % 100) % 10
 	c.pc += 2
 }
-func (c *CHIP8) execFX07(x byte) {
-	delayTimer = int(c.v[x])
+
+func (c *CHIP8) execFX55(x byte) {
+	fmt.Println("Executing FX55")
+	for i := byte(0); i < x; i++ {
+		c.memory[c.i+uint16(i)] = c.v[i]
+	}
 	c.pc += 2
 }
 
-func (c *CHIP8) execFX0A(x byte) {
-	c.v[x] = <-key
+func (c *CHIP8) execFX65(x byte) {
+	fmt.Println("Executing FX65")
+	for i := byte(0); i < x; i++ {
+		c.v[i] = c.memory[c.i+uint16(i)]
+	}
+	c.pc += 2
 }
 
 func (c *CHIP8) Load(romName string) error {
