@@ -194,6 +194,9 @@ func (c *CHIP8) cycle() {
 		case 0x00A1:
 			c.execEXA1(x)
 			break
+		default:
+			fmt.Println("E000: Unspported opcode")
+			break
 		}
 		break
 	case 0xF000:
@@ -226,15 +229,24 @@ func (c *CHIP8) cycle() {
 			c.execFX65(x)
 			break
 		default:
-			//fmt.Println("FX00: Unsupported opcode")
+			fmt.Println("FX00: Unsupported opcode")
 			break
 		}
 		break
-	case 0x0033:
-		c.execFX33(x)
-		break
 	default:
+		fmt.Println("Unsupported opcode")
+		break
+	}
 
+	if c.delayTimer > 0 {
+		c.delayTimer--
+	}
+
+	if c.soundTimer > 0 {
+		if c.soundTimer == 1 {
+			fmt.Println("Beep")
+		}
+		c.soundTimer--
 	}
 
 	//if c.DrawFlag {

@@ -44,7 +44,7 @@ func checkKeyPress() {
 func main() {
 	chip8 = new(system.CHIP8)
 
-	if err := chip8.Run("roms/BC_test.ch8"); err != nil {
+	if err := chip8.Run("roms/pong.ch8"); err != nil {
 		log.Fatal(err)
 	}
 
