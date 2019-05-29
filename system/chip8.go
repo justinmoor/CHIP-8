@@ -41,7 +41,7 @@ func (c *CHIP8) Run(rom string) error {
 	}
 
 	go func() {
-		for range time.Tick(16 * time.Millisecond) {
+		for range time.Tick(time.Millisecond) {
 
 			c.cycle()
 
@@ -379,7 +379,6 @@ func (c *CHIP8) exec8XY4(x, y byte) {
 	c.pc += 2
 }
 
-// TODO: klopt niet
 func (c *CHIP8) exec8XY5(x, y byte) {
 	fmt.Println("Executing 8XY5")
 	if c.v[y] > c.v[x] {
@@ -455,10 +454,10 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
 
 			if (pixel & (0x80 >> xl)) != 0 {
-				if c.gfx[(vy + yl)][(vx+xl)] == 1 {
+				if c.gfx[(vy+yl)%32][(vx+xl)%64] == 1 {
 					c.v[0xF] = 1
 				}
-				c.gfx[(y + yl)][(vx + xl)] ^= 1
+				c.gfx[(vy+yl)%32][(vx + xl%64)] ^= 1
 			}
 		}
 	}
@@ -533,7 +532,6 @@ func (c *CHIP8) execFX55(x byte) {
 	for i := byte(0); i <= x; i++ {
 		c.memory[c.i+uint16(i)] = c.v[i]
 	}
-	//c.i += uint16(x + 1)
 	c.pc += 2
 }
 
@@ -542,7 +540,6 @@ func (c *CHIP8) execFX65(x byte) {
 	for i := byte(0); i <= x; i++ {
 		c.v[i] = c.memory[c.i+uint16(i)]
 	}
-	//c.i += uint16(x + 1)
 	c.pc += 2
 }
 
@@ -567,8 +564,6 @@ func (c *CHIP8) load(romName string) error {
 	// read ROM into memory
 	for i := 0; i < len(buffer); i++ {
 		c.memory[i+0x200] = buffer[i]
-		//hex := fmt.Sprintf("%x", c.memory[i+0x200])
-		//fmt.Printf("%s\n", hex)
 	}
 	return nil
 }
