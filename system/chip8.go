@@ -13,14 +13,10 @@ const (
 	Height = 32
 )
 
-type device interface {
-	Run(rom string) error
-}
-
 type CHIP8 struct {
 	cpu
 	ScreenState chan [Height][Width]byte
-	KeyPress    chan uint16
+	Key         chan Key
 	gfx         [Height][Width]byte // display
 	keys        [16]byte            // current key state
 	drawFlag    bool
@@ -38,6 +34,11 @@ type cpu struct {
 	sp     uint16     // stackpointer
 }
 
+type Key struct {
+	Pressed bool
+	Hex     uint16
+}
+
 func (c *CHIP8) Run(rom string) error {
 	c.initialize()
 
@@ -46,7 +47,7 @@ func (c *CHIP8) Run(rom string) error {
 	}
 
 	go func() {
-		for range time.Tick(time.Millisecond) {
+		for range time.Tick(2 * time.Millisecond) {
 
 			c.cycle()
 
@@ -58,19 +59,30 @@ func (c *CHIP8) Run(rom string) error {
 					break
 				}
 			}
+
+			c.getKeyState()
 		}
 	}()
 
 	return nil
 }
 
-func (c *CHIP8) SendKeyPress(key uint16) {
+func (c *CHIP8) getKeyState() {
 	select {
-	case c.KeyPress <- key:
-		break
+	case k := <-c.Key:
+		if k.Pressed {
+			fmt.Printf("Setting key[%v] to 1\n", k.Hex)
+			c.keys[k.Hex] = 1
+		} else {
+			fmt.Printf("Setting key[%v] to 0\n", k.Hex)
+			c.keys[k.Hex] = 0
+		}
 	default:
-		break
 	}
+}
+
+func (c *CHIP8) SendKeyState(key Key) {
+	c.Key <- key
 }
 
 func (c *CHIP8) initialize() {
@@ -86,7 +98,7 @@ func (c *CHIP8) initialize() {
 	c.stack = [16]uint16{}
 
 	c.ScreenState = make(chan [Height][Width]byte)
-	c.KeyPress = make(chan uint16)
+	c.Key = make(chan Key)
 
 	// load font into memory
 	for i := 0; i < 0x50; i++ {
@@ -262,8 +274,6 @@ func (c *CHIP8) cycle() {
 	//if c.drawFlag {
 	//	c.debugDraw()
 	//}
-	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.opcode))
-	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
 }
 
 func (c *CHIP8) debugDraw() {
@@ -472,8 +482,10 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 
 func (c *CHIP8) execEX9E(x byte) {
 	fmt.Println("Executing EX9E")
+	fmt.Println(c.v[x])
 	if c.keys[c.v[x]] != 0 {
 		c.pc += 4
+		fmt.Println("Key press!!!")
 		return
 	}
 	c.pc += 2
@@ -481,7 +493,7 @@ func (c *CHIP8) execEX9E(x byte) {
 
 func (c *CHIP8) execEXA1(x byte) {
 	fmt.Println("Executing EXA1")
-	if c.keys[c.v[x]] == 0 {
+	if c.keys[c.v[x]] != 0 {
 		c.pc += 4
 		return
 	}
@@ -496,7 +508,17 @@ func (c *CHIP8) execFX07(x byte) {
 
 func (c *CHIP8) execFX0A(x byte) {
 	fmt.Println("Executing FX0A")
-	c.v[x] = c.keys[<-c.KeyPress]
+
+	for {
+		k := <-c.Key
+
+		if k.Pressed {
+			c.v[x] = 1
+			break
+		}
+	}
+
+	fmt.Println("Done")
 	c.pc += 2
 }
 
