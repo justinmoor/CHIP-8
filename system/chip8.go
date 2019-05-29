@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"time"
 )
 
 const (
@@ -40,7 +41,8 @@ func (c *CHIP8) Run(rom string) error {
 	}
 
 	go func() {
-		for {
+		for range time.Tick(16 * time.Millisecond) {
+
 			c.cycle()
 
 			if c.drawFlag {
@@ -104,11 +106,14 @@ func (c *CHIP8) cycle() {
 
 	switch c.opcode & 0xF000 {
 	case 0x0000:
-		switch c.opcode & 0x000F {
+		switch c.opcode & 0x00FF {
 		case 0x0000:
+			c.exec0NNNN(addr)
+			break
+		case 0x00E0:
 			c.exec00E0()
 			break
-		case 0x000E:
+		case 0x00EE:
 			c.exec00EE()
 			break
 		default:
@@ -249,28 +254,31 @@ func (c *CHIP8) cycle() {
 		c.soundTimer--
 	}
 
-	//if c.DrawFlag {
+	//if c.drawFlag {
 	//	c.debugDraw()
 	//}
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.opcode))
 	//fmt.Printf("%s\n", fmt.Sprintf("%x", c.pc))
 }
 
-//func (c *CHIP8) debugDraw() {
-//	for x := 0; x < len(c.Gfx); x++ {
-//		if x%64 == 0 {
-//			fmt.Println()
-//		}
-//
-//		if c.Gfx[x] == 1 {
-//			fmt.Print("1")
-//		} else {
-//			fmt.Print("0")
-//		}
-//	}
-//
-//	fmt.Println()
-//}
+func (c *CHIP8) debugDraw() {
+	for y := 0; y < Height; y++ {
+		for x := 0; x < Width; x++ {
+			if c.gfx[y][x] == 1 {
+				fmt.Print("0")
+			} else {
+				fmt.Print(" ")
+			}
+		}
+		fmt.Println()
+	}
+
+	fmt.Println()
+}
+
+func (c *CHIP8) exec0NNNN(addr uint16) {
+	fmt.Println("Executing 0NNNN")
+}
 
 func (c *CHIP8) exec00E0() {
 	fmt.Println("Executing 00E0")
@@ -362,7 +370,7 @@ func (c *CHIP8) exec8XY3(x, y byte) {
 
 func (c *CHIP8) exec8XY4(x, y byte) {
 	fmt.Println("Executing 8XY4")
-	if c.v[y] > (0xFF - c.v[y]) {
+	if (c.v[y] + c.v[x]) > 0xFF {
 		c.v[0xF] = 1
 	} else {
 		c.v[0xF] = 0
@@ -371,9 +379,10 @@ func (c *CHIP8) exec8XY4(x, y byte) {
 	c.pc += 2
 }
 
+// TODO: klopt niet
 func (c *CHIP8) exec8XY5(x, y byte) {
 	fmt.Println("Executing 8XY5")
-	if c.v[y] > (0xFF - c.v[x]) {
+	if c.v[y] > c.v[x] {
 		c.v[0xF] = 0
 	} else {
 		c.v[0xF] = 1
@@ -382,23 +391,27 @@ func (c *CHIP8) exec8XY5(x, y byte) {
 	c.pc += 2
 }
 
-//TODO: probably not correct
 func (c *CHIP8) exec8XY6(x, y byte) {
 	fmt.Println("Executing 8XY6")
-	c.v[0xF] = c.v[x] & 0x0001
+	c.v[0xF] = c.v[x] & 0x1
 	c.v[x] >>= 1
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY7(x, y byte) {
 	fmt.Println("Executing 8XY7")
+	if c.v[y] > c.v[x] {
+		c.v[0xF] = 1
+	} else {
+		c.v[0xF] = 0
+	}
 	c.v[x] = c.v[y] - c.v[x]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XYE(x, y byte) {
 	fmt.Println("Executing 8XYE")
-	c.v[0xF] = (c.v[x] >> 7) & 0x0001
+	c.v[0xF] = (c.v[x] >> 7) & 0x1
 	c.v[x] <<= 1
 	c.pc += 2
 }
@@ -420,7 +433,7 @@ func (c *CHIP8) execANNN(addr uint16) {
 
 func (c *CHIP8) execBNNN(addr uint16) {
 	fmt.Println("Executing BNNNN")
-	c.pc = addr + uint16(c.v[0x0000])
+	c.pc = addr + uint16(c.v[0x0])
 }
 
 func (c *CHIP8) execCXNN(x, nn byte) {
@@ -442,7 +455,7 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
 
 			if (pixel & (0x80 >> xl)) != 0 {
-				if c.gfx[(vy+yl)%Height][(vx+xl)%Width] == 1 {
+				if c.gfx[(vy + yl)][(vx+xl)] == 1 {
 					c.v[0xF] = 1
 				}
 				c.gfx[(y + yl)][(vx + xl)] ^= 1
@@ -503,7 +516,7 @@ func (c *CHIP8) execFX1E(x byte) {
 
 func (c *CHIP8) execFX29(x byte) {
 	fmt.Println("Executing FX29")
-	c.i = uint16(font[c.v[x]])
+	c.i = uint16(5 * c.v[x])
 	c.pc += 2
 }
 
@@ -517,19 +530,19 @@ func (c *CHIP8) execFX33(x byte) {
 
 func (c *CHIP8) execFX55(x byte) {
 	fmt.Println("Executing FX55")
-	for i := byte(0); i < x; i++ {
+	for i := byte(0); i <= x; i++ {
 		c.memory[c.i+uint16(i)] = c.v[i]
 	}
-	c.i += uint16(x) + 1
+	//c.i += uint16(x + 1)
 	c.pc += 2
 }
 
 func (c *CHIP8) execFX65(x byte) {
 	fmt.Println("Executing FX65")
-	for i := byte(0); i < x; i++ {
+	for i := byte(0); i <= x; i++ {
 		c.v[i] = c.memory[c.i+uint16(i)]
 	}
-	c.i += uint16(x) + 1
+	//c.i += uint16(x + 1)
 	c.pc += 2
 }
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"CHIP-8/system"
+	"fmt"
 	e "github.com/hajimehoshi/ebiten"
 	"image/color"
 	"log"
@@ -28,6 +29,7 @@ func run(screen *e.Image) error {
 
 func checkKeyPress() {
 	if e.IsKeyPressed(e.Key1) {
+		fmt.Println("1 pressed")
 		chip8.SendKeyPress(0x1) // 1
 	}
 	if e.IsKeyPressed(e.Key2) {
@@ -44,7 +46,7 @@ func checkKeyPress() {
 func main() {
 	chip8 = new(system.CHIP8)
 
-	if err := chip8.Run("roms/pong.ch8"); err != nil {
+	if err := chip8.Run("roms/BC_test.ch8"); err != nil {
 		log.Fatal(err)
 	}
 
