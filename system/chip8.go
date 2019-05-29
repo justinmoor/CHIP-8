@@ -13,6 +13,10 @@ const (
 	Height = 32
 )
 
+type device interface {
+	Run(rom string) error
+}
+
 type CHIP8 struct {
 	cpu
 	ScreenState chan [Height][Width]byte
@@ -36,6 +40,7 @@ type cpu struct {
 
 func (c *CHIP8) Run(rom string) error {
 	c.initialize()
+
 	if err := c.load(rom); err != nil {
 		return err
 	}
