@@ -13,21 +13,32 @@ var chip8 *system.CHIP8
 
 func run(screen *e.Image) error {
 	checkKeyPress()
-	gfx := <-chip8.ScreenState
 
-	for x := 0; x < system.Width; x++ {
-		for y := 0; y < system.Height; y++ {
-			if gfx[y][x] == 1 {
-				screen.Set(x, y, color.White)
+	if chip8.DrawFlag {
+		for x := 0; x < system.Width; x++ {
+			for y := 0; y < system.Height; y++ {
+				if chip8.Gfx[y][x] == 1 {
+					screen.Set(x, y, color.White)
+				}
 			}
 		}
 	}
-
 	return nil
 }
 
-func checkKeyPress() {
+func main() {
+	chip8 = new(system.CHIP8)
 
+	if err := chip8.Run("roms/invaders.ch8"); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := e.Run(run, system.Width, system.Height, scale, "CHIP-8"); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func checkKeyPress() {
 	if e.IsKeyPressed(e.Key1) {
 		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x1})
 	} else {
@@ -122,17 +133,5 @@ func checkKeyPress() {
 		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0xF})
 	} else {
 		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0xF})
-	}
-}
-
-func main() {
-	chip8 = new(system.CHIP8)
-
-	if err := chip8.Run("roms/tictac.ch8"); err != nil {
-		log.Fatal(err)
-	}
-
-	if err := e.Run(run, system.Width, system.Height, scale, "CHIP-8"); err != nil {
-		log.Fatal(err)
 	}
 }

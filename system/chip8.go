@@ -17,9 +17,9 @@ type CHIP8 struct {
 	cpu
 	ScreenState chan [Height][Width]byte
 	Key         chan Key
-	gfx         [Height][Width]byte // display
+	Gfx         [Height][Width]byte // display
 	keys        [16]byte            // current key state
-	drawFlag    bool
+	DrawFlag    bool
 	delayTimer  byte
 	soundTimer  byte
 }
@@ -48,41 +48,33 @@ func (c *CHIP8) Run(rom string) error {
 
 	go func() {
 		for range time.Tick(2 * time.Millisecond) {
-
 			c.cycle()
-
-			if c.drawFlag {
-				select {
-				case c.ScreenState <- c.gfx:
-					break
-				default:
-					break
-				}
-			}
-
-			c.getKeyState()
 		}
 	}()
 
 	return nil
 }
 
-func (c *CHIP8) getKeyState() {
-	select {
-	case k := <-c.Key:
-		if k.Pressed {
-			fmt.Printf("Setting key[%v] to 1\n", k.Hex)
-			c.keys[k.Hex] = 1
-		} else {
-			fmt.Printf("Setting key[%v] to 0\n", k.Hex)
-			c.keys[k.Hex] = 0
-		}
-	default:
-	}
-}
+//func (c *CHIP8) getKeyState() {
+//	select {
+//	case k := <-c.Key:
+//		if k.Pressed {
+//			fmt.Printf("Setting key[%v] to 1\n", k.Hex)
+//			c.keys[k.Hex] = 1
+//		} else {
+//			fmt.Printf("Setting key[%v] to 0\n", k.Hex)
+//			c.keys[k.Hex] = 0
+//		}
+//	default:
+//	}
+//}
 
 func (c *CHIP8) SendKeyState(key Key) {
-	c.Key <- key
+	if key.Pressed {
+		c.keys[key.Hex] = 1
+	} else {
+		c.keys[key.Hex] = 0
+	}
 }
 
 func (c *CHIP8) initialize() {
@@ -90,7 +82,7 @@ func (c *CHIP8) initialize() {
 	c.opcode = 0x00
 	c.i = 0x00
 	c.sp = 0x00
-	c.drawFlag = false
+	c.DrawFlag = false
 
 	// clear all the memory
 	c.memory = [4096]byte{}
@@ -270,16 +262,12 @@ func (c *CHIP8) cycle() {
 		}
 		c.soundTimer--
 	}
-
-	//if c.drawFlag {
-	//	c.debugDraw()
-	//}
 }
 
 func (c *CHIP8) debugDraw() {
 	for y := 0; y < Height; y++ {
 		for x := 0; x < Width; x++ {
-			if c.gfx[y][x] == 1 {
+			if c.Gfx[y][x] == 1 {
 				fmt.Print("0")
 			} else {
 				fmt.Print(" ")
@@ -297,8 +285,8 @@ func (c *CHIP8) exec0NNNN(addr uint16) {
 
 func (c *CHIP8) exec00E0() {
 	fmt.Println("Executing 00E0")
-	c.gfx = [Height][Width]byte{}
-	c.drawFlag = true
+	c.Gfx = [Height][Width]byte{}
+	c.DrawFlag = true
 	c.pc += 2
 }
 
@@ -469,14 +457,14 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
 
 			if (pixel & (0x80 >> xl)) != 0 {
-				if c.gfx[(vy+yl)%32][(vx+xl)%64] == 1 {
+				if c.Gfx[(vy+yl)%32][(vx+xl)%64] == 1 {
 					c.v[0xF] = 1
 				}
-				c.gfx[(vy+yl)%32][(vx + xl%64)] ^= 1
+				c.Gfx[(vy+yl)%32][(vx + xl%64)] ^= 1
 			}
 		}
 	}
-	c.drawFlag = true
+	c.DrawFlag = true
 	c.pc += 2
 }
 
@@ -509,16 +497,18 @@ func (c *CHIP8) execFX07(x byte) {
 func (c *CHIP8) execFX0A(x byte) {
 	fmt.Println("Executing FX0A")
 
+Pause:
 	for {
-		k := <-c.Key
-
-		if k.Pressed {
-			c.v[x] = 1
-			break
+		fmt.Println("Waiting")
+		for _, k := range c.keys {
+			if k == 1 {
+				fmt.Println("Done!")
+				c.v[x] = k
+				break Pause
+			}
 		}
 	}
 
-	fmt.Println("Done")
 	c.pc += 2
 }
 
