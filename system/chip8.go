@@ -15,13 +15,11 @@ const (
 
 type CHIP8 struct {
 	cpu
-	ScreenState chan [Height][Width]byte
-	Key         chan Key
-	Gfx         [Height][Width]byte // display
-	keys        [16]byte            // current key state
-	DrawFlag    bool
-	delayTimer  byte
-	soundTimer  byte
+	Gfx        [Height][Width]byte // display
+	keys       [16]byte            // current key state
+	DrawFlag   bool
+	delayTimer byte
+	soundTimer byte
 }
 
 type cpu struct {
@@ -55,20 +53,6 @@ func (c *CHIP8) Run(rom string) error {
 	return nil
 }
 
-//func (c *CHIP8) getKeyState() {
-//	select {
-//	case k := <-c.Key:
-//		if k.Pressed {
-//			fmt.Printf("Setting key[%v] to 1\n", k.Hex)
-//			c.keys[k.Hex] = 1
-//		} else {
-//			fmt.Printf("Setting key[%v] to 0\n", k.Hex)
-//			c.keys[k.Hex] = 0
-//		}
-//	default:
-//	}
-//}
-
 func (c *CHIP8) SendKeyState(key Key) {
 	if key.Pressed {
 		c.keys[key.Hex] = 1
@@ -88,9 +72,6 @@ func (c *CHIP8) initialize() {
 	c.memory = [4096]byte{}
 	c.v = [16]byte{}
 	c.stack = [16]uint16{}
-
-	c.ScreenState = make(chan [Height][Width]byte)
-	c.Key = make(chan Key)
 
 	// load font into memory
 	for i := 0; i < 0x50; i++ {
