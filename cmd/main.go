@@ -29,7 +29,7 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 
-	if err := chip8.Run("roms/TANK"); err != nil {
+	if err := chip8.Run("roms/PONG1"); err != nil {
 		log.Fatal(err)
 	}
 

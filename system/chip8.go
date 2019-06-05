@@ -45,7 +45,7 @@ func (c *CHIP8) Run(rom string) error {
 	}
 
 	go func() {
-		for range time.Tick(2 * time.Millisecond) {
+		for range time.Tick(16 * time.Millisecond) {
 			c.cycle()
 		}
 	}()
