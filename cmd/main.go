@@ -29,7 +29,7 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 
-	if err := chip8.Run("roms/invaders.ch8"); err != nil {
+	if err := chip8.Run("roms/TANK"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -58,9 +58,9 @@ func checkKeyPress() {
 	}
 
 	if e.IsKeyPressed(e.Key4) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0xC})
+		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x5})
 	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0xC})
+		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x5})
 	}
 
 	if e.IsKeyPressed(e.KeyQ) {

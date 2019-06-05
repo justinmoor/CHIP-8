@@ -190,7 +190,7 @@ func (c *CHIP8) cycle() {
 			c.execEXA1(x)
 			break
 		default:
-			fmt.Println("E000: Unspported opcode")
+			fmt.Println("E000: Unsupported opcode")
 			break
 		}
 		break
@@ -451,10 +451,8 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 
 func (c *CHIP8) execEX9E(x byte) {
 	fmt.Println("Executing EX9E")
-	fmt.Println(c.v[x])
 	if c.keys[c.v[x]] != 0 {
 		c.pc += 4
-		fmt.Println("Key press!!!")
 		return
 	}
 	c.pc += 2
@@ -480,10 +478,8 @@ func (c *CHIP8) execFX0A(x byte) {
 
 Pause:
 	for {
-		fmt.Println("Waiting")
 		for _, k := range c.keys {
 			if k == 1 {
-				fmt.Println("Done!")
 				c.v[x] = k
 				break Pause
 			}

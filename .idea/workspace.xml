@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b225d14-5d0a-4f33-8fb9-2ee41e8bd5be" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/system/chip8.go" beforeDir="false" afterPath="$PROJECT_DIR$/system/chip8.go" afterDir="false" />
     </list>
@@ -14,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/system/chip8.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="506" column="27" lean-forward="true" selection-start-line="506" selection-start-column="27" selection-end-line="506" selection-end-column="27" />
+            <state relative-caret-position="15">
+              <caret line="47" column="49" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="49" />
               <folding>
                 <element signature="e#16#69#0" expanded="true" />
               </folding>
@@ -44,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cmd/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="30" column="13" lean-forward="true" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+            <state relative-caret-position="465">
+              <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
               <folding>
                 <element signature="e#14#65#0" expanded="true" />
               </folding>
@@ -101,6 +100,9 @@
       <find>&lt;-</find>
       <find>-&gt;</find>
       <find>done</find>
+      <find>Fmt.println(c.</find>
+      <find>8X</find>
+      <find>FX0</find>
     </findStrings>
   </component>
   <component name="GOROOT" path="C:\Go" />
@@ -116,10 +118,10 @@
         <option value="$PROJECT_DIR$/experimental/chip8-fp.go" />
         <option value="$PROJECT_DIR$/system/font.go" />
         <option value="$PROJECT_DIR$/go.mod" />
-        <option value="$PROJECT_DIR$/system/chip8.go" />
-        <option value="$PROJECT_DIR$/system/chip8.go" />
         <option value="$PROJECT_DIR$/cmd/main.go" />
         <option value="$PROJECT_DIR$/cmd/main.go" />
+        <option value="$PROJECT_DIR$/system/chip8.go" />
+        <option value="$PROJECT_DIR$/system/chip8.go" />
       </list>
     </option>
   </component>
@@ -145,6 +147,11 @@
               <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
               <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
               <item name="cmd" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
+              <item name="roms" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
@@ -234,12 +241,12 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.21677852" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21677852" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.27053824" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.20963173" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.18130311" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -270,7 +277,8 @@
     <MESSAGE value="remove experimental folder" />
     <MESSAGE value="add opcode table as .txt format" />
     <MESSAGE value="implement key presses, FX0A still needs a fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="implement key presses, FX0A still needs a fix" />
+    <MESSAGE value="fix for FX0A" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix for FX0A" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
@@ -441,22 +449,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/system/chip8.go">
+    <entry file="file://$PROJECT_DIR$/cmd/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="506" column="27" lean-forward="true" selection-start-line="506" selection-start-column="27" selection-end-line="506" selection-end-column="27" />
+        <state relative-caret-position="465">
+          <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
           <folding>
-            <element signature="e#16#69#0" expanded="true" />
+            <element signature="e#14#65#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cmd/main.go">
+    <entry file="file://$PROJECT_DIR$/system/chip8.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="30" column="13" lean-forward="true" selection-start-line="30" selection-start-column="13" selection-end-line="30" selection-end-column="13" />
+        <state relative-caret-position="15">
+          <caret line="47" column="49" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="49" />
           <folding>
-            <element signature="e#14#65#0" expanded="true" />
+            <element signature="e#16#69#0" expanded="true" />
           </folding>
         </state>
       </provider>
