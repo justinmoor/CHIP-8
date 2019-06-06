@@ -45,7 +45,7 @@ func (c *CHIP8) Run(rom string) error {
 	}
 
 	go func() {
-		for range time.Tick(16 * time.Millisecond) {
+		for range time.Tick(16 * time.Nanosecond) {
 			c.cycle()
 		}
 	}()
@@ -56,8 +56,10 @@ func (c *CHIP8) Run(rom string) error {
 func (c *CHIP8) SendKeyState(key Key) {
 	if key.Pressed {
 		c.keys[key.Hex] = 1
+		fmt.Printf("Setting key %v to 1\n", key.Hex)
 	} else {
 		c.keys[key.Hex] = 0
+		fmt.Printf("Setting key %v to 0\n", key.Hex)
 	}
 }
 
@@ -460,7 +462,7 @@ func (c *CHIP8) execEX9E(x byte) {
 
 func (c *CHIP8) execEXA1(x byte) {
 	fmt.Println("Executing EXA1")
-	if c.keys[c.v[x]] != 0 {
+	if c.keys[c.v[x]] == 0 {
 		c.pc += 4
 		return
 	}
