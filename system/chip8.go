@@ -13,6 +13,13 @@ const (
 	Height = 32
 )
 
+var KeyMap = map[string]uint8{
+	"1" : 0x1, "2" : 0x2, "3" : 0x3, "4" : 0xC,
+	"Q" : 0x4, "W" : 0x5, "E" : 0x6, "R" : 0xD,
+	"A" : 0x7, "S" : 0x5, "D" : 0x9, "F" : 0xE,
+	"Z" : 0xA, "X" : 0x0, "C" : 0xB, "V" : 0xF,
+}
+
 type CHIP8 struct {
 	cpu
 	Gfx        [Height][Width]byte // display
@@ -32,11 +39,6 @@ type cpu struct {
 	sp     uint16     // stackpointer
 }
 
-type Key struct {
-	Pressed bool
-	Hex     uint16
-}
-
 func (c *CHIP8) Run(rom string) error {
 	c.initialize()
 
@@ -53,13 +55,13 @@ func (c *CHIP8) Run(rom string) error {
 	return nil
 }
 
-func (c *CHIP8) SendKeyState(key Key) {
-	if key.Pressed {
-		c.keys[key.Hex] = 1
-		fmt.Printf("Setting key %v to 1\n", key.Hex)
-	} else {
-		c.keys[key.Hex] = 0
-		fmt.Printf("Setting key %v to 0\n", key.Hex)
+func (c *CHIP8) SendKeyPress(k uint8) {
+	c.keys[k] = 1
+}
+
+func (c *CHIP8) ResetKeys(){
+	for i := range c.keys {
+		c.keys[i] = 0
 	}
 }
 
@@ -443,7 +445,7 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 				if c.Gfx[(vy+yl)%32][(vx+xl)%64] == 1 {
 					c.v[0xF] = 1
 				}
-				c.Gfx[(vy+yl)%32][(vx + xl%64)] ^= 1
+				c.Gfx[(vy+yl)%32][(vx + xl)%64] ^= 1
 			}
 		}
 	}
@@ -478,7 +480,7 @@ func (c *CHIP8) execFX07(x byte) {
 func (c *CHIP8) execFX0A(x byte) {
 	fmt.Println("Executing FX0A")
 
-Pause:
+	Pause:
 	for {
 		for _, k := range c.keys {
 			if k == 1 {

@@ -12,7 +12,7 @@ const scale = 16
 var chip8 *system.CHIP8
 
 func run(screen *e.Image) error {
-	checkKeyPress()
+	getKeyState()
 
 	if chip8.DrawFlag {
 		for x := 0; x < system.Width; x++ {
@@ -29,7 +29,7 @@ func run(screen *e.Image) error {
 func main() {
 	chip8 = new(system.CHIP8)
 
-	if err := chip8.Run("roms/PONG1"); err != nil {
+	if err := chip8.Run("roms/INVADERS"); err != nil {
 		log.Fatal(err)
 	}
 
@@ -38,100 +38,55 @@ func main() {
 	}
 }
 
-func checkKeyPress() {
+func getKeyState() {
+	chip8.ResetKeys()
+
 	if e.IsKeyPressed(e.Key1) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x1})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x1})
+		chip8.SendKeyPress(system.KeyMap[e.Key1.String()])
 	}
-
 	if e.IsKeyPressed(e.Key2) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x2})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x2})
+		chip8.SendKeyPress(system.KeyMap[e.Key2.String()])
 	}
-
 	if e.IsKeyPressed(e.Key3) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x3})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x3})
+		chip8.SendKeyPress(system.KeyMap[e.Key3.String()])
 	}
-
 	if e.IsKeyPressed(e.Key4) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x5})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x5})
+		chip8.SendKeyPress(system.KeyMap[e.Key4.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyQ) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x4})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x4})
+		chip8.SendKeyPress(system.KeyMap[e.KeyQ.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyW) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x5})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x5})
+		chip8.SendKeyPress(system.KeyMap[e.KeyW.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyE) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x6})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x6})
+		chip8.SendKeyPress(system.KeyMap[e.KeyE.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyR) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0xD})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0xD})
+		chip8.SendKeyPress(system.KeyMap[e.KeyR.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyA) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x7})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x7})
+		chip8.SendKeyPress(system.KeyMap[e.KeyA.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyS) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x8})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x8})
+		chip8.SendKeyPress(system.KeyMap[e.KeyS.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyD) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x9})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x9})
+		chip8.SendKeyPress(system.KeyMap[e.KeyD.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyF) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0xE})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0xE})
+		chip8.SendKeyPress(system.KeyMap[e.KeyF.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyZ) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0xA})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0xA})
+		chip8.SendKeyPress(system.KeyMap[e.KeyZ.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyX) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0x0})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0x0})
+		chip8.SendKeyPress(system.KeyMap[e.KeyX.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyC) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0xB})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0xB})
+		chip8.SendKeyPress(system.KeyMap[e.KeyC.String()])
 	}
-
 	if e.IsKeyPressed(e.KeyV) {
-		chip8.SendKeyState(system.Key{Pressed: true, Hex: 0xF})
-	} else {
-		chip8.SendKeyState(system.Key{Pressed: false, Hex: 0xF})
+		chip8.SendKeyPress(system.KeyMap[e.KeyV.String()])
 	}
 }
