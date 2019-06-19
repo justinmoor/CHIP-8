@@ -3,9 +3,10 @@ package system
 import (
 	"bufio"
 	"fmt"
+	"io/ioutil"
 	"math/rand"
+	"net/http"
 	"os"
-	"time"
 )
 
 const (
@@ -14,10 +15,10 @@ const (
 )
 
 var KeyMap = map[string]uint8{
-	"1" : 0x1, "2" : 0x2, "3" : 0x3, "4" : 0xC,
-	"Q" : 0x4, "W" : 0x5, "E" : 0x6, "R" : 0xD,
-	"A" : 0x7, "S" : 0x5, "D" : 0x9, "F" : 0xE,
-	"Z" : 0xA, "X" : 0x0, "C" : 0xB, "V" : 0xF,
+	"1": 0x1, "2": 0x2, "3": 0x3, "4": 0xC,
+	"Q": 0x4, "W": 0x5, "E": 0x6, "R": 0xD,
+	"A": 0x7, "S": 0x5, "D": 0x9, "F": 0xE,
+	"Z": 0xA, "X": 0x0, "C": 0xB, "V": 0xF,
 }
 
 type CHIP8 struct {
@@ -39,27 +40,17 @@ type cpu struct {
 	sp     uint16     // stackpointer
 }
 
-func (c *CHIP8) Run(rom string) error {
+func New() *CHIP8 {
+	c := new(CHIP8)
 	c.initialize()
-
-	if err := c.load(rom); err != nil {
-		return err
-	}
-
-	go func() {
-		for range time.Tick(16 * time.Nanosecond) {
-			c.cycle()
-		}
-	}()
-
-	return nil
+	return c
 }
 
 func (c *CHIP8) SendKeyPress(k uint8) {
 	c.keys[k] = 1
 }
 
-func (c *CHIP8) ResetKeys(){
+func (c *CHIP8) ResetKeys() {
 	for i := range c.keys {
 		c.keys[i] = 0
 	}
@@ -87,7 +78,7 @@ func (c *CHIP8) initialize() {
 // decode opcode
 // execude opcode
 // update timers
-func (c *CHIP8) cycle() {
+func (c *CHIP8) Cycle() {
 	c.opcode = uint16(c.memory[c.pc])
 	c.opcode <<= 8
 	c.opcode |= uint16(c.memory[c.pc+1])
@@ -445,7 +436,7 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 				if c.Gfx[(vy+yl)%32][(vx+xl)%64] == 1 {
 					c.v[0xF] = 1
 				}
-				c.Gfx[(vy+yl)%32][(vx + xl)%64] ^= 1
+				c.Gfx[(vy+yl)%32][(vx+xl)%64] ^= 1
 			}
 		}
 	}
@@ -480,17 +471,16 @@ func (c *CHIP8) execFX07(x byte) {
 func (c *CHIP8) execFX0A(x byte) {
 	fmt.Println("Executing FX0A")
 
-	Pause:
 	for {
 		for _, k := range c.keys {
 			if k == 1 {
+				fmt.Println("Key press")
 				c.v[x] = k
-				break Pause
+				c.pc += 2
+				return
 			}
 		}
 	}
-
-	c.pc += 2
 }
 
 func (c *CHIP8) execFX15(x byte) {
@@ -541,7 +531,24 @@ func (c *CHIP8) execFX65(x byte) {
 	c.pc += 2
 }
 
-func (c *CHIP8) load(romName string) error {
+func (c *CHIP8) LoadRomHttp(loc string) error {
+	resp, err := http.Get(loc)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+
+	b, err := ioutil.ReadAll(resp.Body)
+
+	for i := 0; i < len(b); i++ {
+		c.memory[i+0x200] = b[i]
+	}
+
+	return nil
+}
+
+func (c *CHIP8) Load(romName string) error {
 	rom, err := os.Open(romName)
 	if err != nil {
 		return err
