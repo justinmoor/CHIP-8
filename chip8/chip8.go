@@ -1,4 +1,4 @@
-package system
+package chip8
 
 import (
 	"bufio"
@@ -238,6 +238,7 @@ func (c *CHIP8) Cycle() {
 		}
 		c.soundTimer--
 	}
+
 }
 
 func (c *CHIP8) debugDraw() {
@@ -531,7 +532,7 @@ func (c *CHIP8) execFX65(x byte) {
 	c.pc += 2
 }
 
-func (c *CHIP8) LoadRomHttp(loc string) error {
+func (c *CHIP8) LoadRomHTTP(loc string) error {
 	resp, err := http.Get(loc)
 	if err != nil {
 		return err

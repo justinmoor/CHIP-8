@@ -1,7 +1,7 @@
 package main
 
 import (
-	"CHIP-8/system"
+	"CHIP-8/chip8"
 	"syscall/js"
 )
 
@@ -33,30 +33,30 @@ func setup() {
 
 func main() {
 	setup()
-	chip8 := system.New()
+	c := chip8.New()
 
-	if err := chip8.LoadRomHttp("http://localhost:8000/PONG1"); err != nil {
+	if err := c.LoadRomHTTP("http://localhost:8000/PONG1"); err != nil {
 		panic(err)
 	}
 
 	var renderer js.Func
 	renderer = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		ctx.Call("clearRect", 0, 0, width, height)
+		c.Cycle()
 
-		chip8.Cycle()
-		if chip8.DrawFlag {
-			for x := 0; x < system.Width; x++ {
-				for y := 0; y < system.Height; y++ {
-					if chip8.Gfx[y][x] == 1 {
+		if c.DrawFlag {
+			for x := 0; x < chip8.Width; x++ {
+				for y := 0; y < chip8.Height; y++ {
+					if c.Gfx[y][x] == 1 {
 						ctx.Call("fillRect", x, y, 1, 1)
 					}
 				}
 			}
 		}
-
 		window.Call("requestAnimationFrame", renderer)
 		return nil
 	})
+
 
 	window.Call("requestAnimationFrame", renderer)
 

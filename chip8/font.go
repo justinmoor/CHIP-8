@@ -1,4 +1,4 @@
-package system
+package chip8
 
 var font = []byte{
 	0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
