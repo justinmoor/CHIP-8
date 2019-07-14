@@ -14,7 +14,6 @@ var c *chip8.CHIP8
 
 func run(screen *e.Image) error {
 	getKeyState()
-
 	if c.DrawFlag {
 		for x := 0; x < chip8.Width; x++ {
 			for y := 0; y < chip8.Height; y++ {
@@ -30,7 +29,7 @@ func run(screen *e.Image) error {
 func main() {
 	c = chip8.New()
 
-	if err := c.Load("roms/PONG1"); err != nil {
+	if err := c.Load("roms/TICTAC"); err != nil {
 		log.Fatal("Could not load ROM")
 	}
 

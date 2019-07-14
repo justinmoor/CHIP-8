@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="1b225d14-5d0a-4f33-8fb9-2ee41e8bd5be" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chip8/chip8.go" beforeDir="false" afterPath="$PROJECT_DIR$/chip8/chip8.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/gui/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/gui/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/web/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/web/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/system/chip8.go" beforeDir="false" afterPath="$PROJECT_DIR$/chip8/chip8.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/system/font.go" beforeDir="false" afterPath="$PROJECT_DIR$/chip8/font.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/main.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/web/main.wasm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/PONG1" beforeDir="false" afterPath="$PROJECT_DIR$/static/PONG1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/main.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/static/main.wasm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/web/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/wasm_exec.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/wasm_exec.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,19 +20,28 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/chip8/chip8.go">
+        <entry file="file://$PROJECT_DIR$/cmd/gui/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3706">
-              <caret line="225" column="12" selection-start-line="225" selection-start-column="12" selection-end-line="225" selection-end-column="12" />
+            <state relative-caret-position="390">
+              <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/chip8/chip8.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="247">
+              <caret line="472" column="33" lean-forward="true" selection-start-line="472" selection-start-column="33" selection-end-line="472" selection-end-column="33" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cmd/web/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="545">
-              <caret line="50" column="56" selection-start-line="50" selection-start-column="56" selection-end-line="50" selection-end-column="56" />
+            <state relative-caret-position="143">
+              <caret line="48" column="36" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -38,8 +49,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/server.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
+            <state relative-caret-position="165">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
               <folding>
                 <element signature="e#14#43#0" expanded="true" />
               </folding>
@@ -48,15 +59,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/main.wasm">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file://$PROJECT_DIR$/opcode_table.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="345">
+              <caret line="23" column="51" selection-start-line="23" selection-start-column="51" selection-end-line="23" selection-end-column="51" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cmd/gui/main.go">
+        <entry file="file://$PROJECT_DIR$/go.sum">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="16" selection-start-line="16" selection-end-line="16" />
+            <state relative-caret-position="630">
+              <caret line="42" selection-start-line="42" selection-end-line="42" />
             </state>
           </provider>
         </entry>
@@ -64,38 +79,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/go.mod">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
+            <state relative-caret-position="75">
               <caret line="5" selection-start-line="5" selection-end-line="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/index.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/wasm_exec.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Go/src/net/http/fs.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11849">
-              <caret line="712" column="5" selection-start-line="712" selection-start-column="5" selection-end-line="712" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -132,6 +117,7 @@
       <find>FX0A</find>
       <find>Run</find>
       <find>drawf</find>
+      <find>c.keys</find>
     </findStrings>
   </component>
   <component name="GOROOT" path="C:\Go" />
@@ -149,23 +135,22 @@
         <option value="$PROJECT_DIR$/go.mod" />
         <option value="$PROJECT_DIR$/server.go" />
         <option value="$PROJECT_DIR$/server/server.go" />
-        <option value="$PROJECT_DIR$/web/server.go" />
         <option value="$PROJECT_DIR$/cmd/main.go" />
         <option value="$PROJECT_DIR$/cmd/main.go" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/system/chip8.go" />
         <option value="$PROJECT_DIR$/system/chip8.go" />
-        <option value="$PROJECT_DIR$/cmd/gui/main.go" />
-        <option value="$PROJECT_DIR$/chip8/chip8.go" />
         <option value="$PROJECT_DIR$/cmd/web/main.go" />
+        <option value="$PROJECT_DIR$/cmd/gui/main.go" />
+        <option value="$PROJECT_DIR$/web/server.go" />
+        <option value="$PROJECT_DIR$/chip8/chip8.go" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-590" />
-    <option name="y" value="-703" />
-    <option name="width" value="1620" />
-    <option name="height" value="870" />
+    <option name="x" value="952" />
+    <option name="width" value="977" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -185,6 +170,11 @@
             <path>
               <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
               <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
+              <item name="chip8" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
               <item name="cmd" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -192,12 +182,6 @@
               <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
               <item name="cmd" type="462c0819:PsiDirectoryNode" />
               <item name="gui" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
-              <item name="cmd" type="462c0819:PsiDirectoryNode" />
-              <item name="web" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
@@ -225,18 +209,18 @@
     <property name="settings.editor.selected.configurable" value="preferences.editor" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Justin\go\src\CHIP-8\cmd\web" />
-      <recent name="C:\Users\Justin\go\src\CHIP-8\web" />
-      <recent name="C:\Users\Justin\go\src\CHIP8\experimental" />
-      <recent name="C:\Users\Justin\go\src\CHIP8\roms" />
-      <recent name="C:\Users\Justin\go\src\CHIP8\system" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Justin\go\src\CHIP-8\web" />
       <recent name="C:\Users\Justin\go\src\CHIP-8\cmd" />
       <recent name="C:\Users\justi\go\src\CHIP-8" />
       <recent name="C:\Users\Justin\go\src\CHIP8\system" />
+      <recent name="C:\Users\Justin\go\src\CHIP8\roms" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\go\src\CHIP-8\static" />
+      <recent name="C:\Users\Justin\go\src\CHIP-8\cmd\web" />
+      <recent name="C:\Users\Justin\go\src\CHIP-8\web" />
+      <recent name="C:\Users\Justin\go\src\CHIP8\experimental" />
       <recent name="C:\Users\Justin\go\src\CHIP8\roms" />
     </key>
   </component>
@@ -252,7 +236,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Build.go build wasm main.go">
+  <component name="RunManager" selected="Go Build.go build main.go">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="CHIP-8" />
       <working_directory value="$PROJECT_DIR$/" />
@@ -317,15 +301,16 @@
     </recent_temporary>
   </component>
   <component name="ToolWindowManager">
-    <frame x="4" y="-1088" width="1936" height="1056" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.141258" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22281879" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.26257545" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.18108653" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.26203966" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.17988668" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -466,7 +451,6 @@
     <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/veandco/go-sdl2@v0.3.0/sdl/keycode.go" />
     <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/hajimehoshi/ebiten@v1.9.3/input.go" />
     <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/hajimehoshi/ebiten@v1.9.3/image.go" />
-    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/hajimehoshi/ebiten@v1.9.3/run.go" />
     <entry file="file://C:/Go/src/os/file_windows.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-15">
@@ -476,7 +460,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/opcode_table.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
+        <state relative-caret-position="345">
           <caret line="23" column="51" selection-start-line="23" selection-start-column="51" selection-end-line="23" selection-end-column="51" />
         </state>
       </provider>
@@ -523,8 +507,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/go.sum">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="52" selection-start-line="23" selection-start-column="52" selection-end-line="23" selection-end-column="52" />
+        <state relative-caret-position="630">
+          <caret line="42" selection-start-line="42" selection-end-line="42" />
         </state>
       </provider>
     </entry>
@@ -535,48 +519,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/chip8/chip8.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3706">
-          <caret line="225" column="12" selection-start-line="225" selection-start-column="12" selection-end-line="225" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/server.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
-          <folding>
-            <element signature="e#14#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/web/main.wasm">
+    <entry file="file://$PROJECT_DIR$/static/main.wasm">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cmd/gui/main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/go.mod">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
+        <state relative-caret-position="75">
           <caret line="5" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/index.html">
+    <entry file="file://$PROJECT_DIR$/static/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
           <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/wasm_exec.js">
+    <entry file="file://$PROJECT_DIR$/static/wasm_exec.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
@@ -586,17 +546,55 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/hajimehoshi/ebiten@v1.9.3/run.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="142" column="5" selection-start-line="142" selection-start-column="5" selection-end-line="142" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://C:/Go/src/net/http/fs.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11849">
-          <caret line="712" column="5" selection-start-line="712" selection-start-column="5" selection-end-line="712" selection-end-column="5" />
+        <state relative-caret-position="300">
+          <caret line="39" column="5" selection-start-line="39" selection-start-column="5" selection-end-line="39" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/server.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="e#14#43#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cmd/web/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="545">
-          <caret line="50" column="56" selection-start-line="50" selection-start-column="56" selection-end-line="50" selection-end-column="56" />
+        <state relative-caret-position="143">
+          <caret line="48" column="36" selection-start-line="48" selection-start-column="36" selection-end-line="48" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/fmt/print.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="262" column="5" selection-start-line="262" selection-start-column="5" selection-end-line="262" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmd/gui/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="47" column="12" selection-start-line="47" selection-start-column="12" selection-end-line="47" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/chip8/chip8.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="472" column="33" lean-forward="true" selection-start-line="472" selection-start-column="33" selection-end-line="472" selection-end-column="33" />
         </state>
       </provider>
     </entry>
