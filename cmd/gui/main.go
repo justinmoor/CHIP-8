@@ -17,7 +17,7 @@ func run(screen *e.Image) error {
 	if c.DrawFlag {
 		for x := 0; x < chip8.Width; x++ {
 			for y := 0; y < chip8.Height; y++ {
-				if c.Gfx[y][x] == 1 {
+				if c.Gfx[x][y] == 1 {
 					screen.Set(x, y, color.White)
 				}
 			}
@@ -29,7 +29,7 @@ func run(screen *e.Image) error {
 func main() {
 	c = chip8.New()
 
-	if err := c.Load("roms/TICTAC"); err != nil {
+	if err := c.Load("roms/PONG"); err != nil {
 		log.Fatal("Could not load ROM")
 	}
 

@@ -23,7 +23,7 @@ var KeyMap = map[string]uint8{
 
 type CHIP8 struct {
 	cpu
-	Gfx        [Height][Width]byte // display
+	Gfx        [Width][Height]byte // display
 	keys       [16]byte            // current key state
 	DrawFlag   bool
 	delayTimer byte
@@ -244,7 +244,7 @@ func (c *CHIP8) Cycle() {
 func (c *CHIP8) debugDraw() {
 	for y := 0; y < Height; y++ {
 		for x := 0; x < Width; x++ {
-			if c.Gfx[y][x] == 1 {
+			if c.Gfx[x][y] == 1 {
 				fmt.Print("0")
 			} else {
 				fmt.Print(" ")
@@ -262,7 +262,7 @@ func (c *CHIP8) exec0NNNN(addr uint16) {
 
 func (c *CHIP8) exec00E0() {
 	fmt.Println("Executing 00E0")
-	c.Gfx = [Height][Width]byte{}
+	c.Gfx = [Width][Height]byte{}
 	c.DrawFlag = true
 	c.pc += 2
 }
@@ -434,10 +434,10 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 		for xl := byte(0); xl < 8; xl++ { // width => always 8 pixels
 
 			if (pixel & (0x80 >> xl)) != 0 {
-				if c.Gfx[(vy+yl)%32][(vx+xl)%64] == 1 {
+				if c.Gfx[(vx+xl)%64][(vy+yl)%32] == 1 {
 					c.v[0xF] = 1
 				}
-				c.Gfx[(vy+yl)%32][(vx+xl)%64] ^= 1
+				c.Gfx[(vx+xl)%64][(vy+yl)%32] ^= 1
 			}
 		}
 	}
