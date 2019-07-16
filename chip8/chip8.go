@@ -1,5 +1,6 @@
 package chip8
 
+import "C"
 import (
 	"bufio"
 	"fmt"
@@ -23,11 +24,12 @@ var KeyMap = map[string]uint8{
 
 type CHIP8 struct {
 	cpu
-	Gfx        [Width][Height]byte // display
+	Gfx        [Width][Height]byte // display buffer
 	keys       [16]byte            // current key state
 	DrawFlag   bool
 	delayTimer byte
 	soundTimer byte
+	keyBuffer  chan uint8
 }
 
 type cpu struct {
@@ -50,10 +52,8 @@ func (c *CHIP8) SendKeyPress(k uint8) {
 	c.keys[k] = 1
 }
 
-func (c *CHIP8) ResetKeys() {
-	for i := range c.keys {
-		c.keys[i] = 0
-	}
+func (c *CHIP8) resetKeys() {
+	c.keys = [16]byte{}
 }
 
 func (c *CHIP8) initialize() {
@@ -67,6 +67,8 @@ func (c *CHIP8) initialize() {
 	c.memory = [4096]byte{}
 	c.v = [16]byte{}
 	c.stack = [16]uint16{}
+
+	c.keyBuffer = make(chan uint8, 10)
 
 	// load font into memory
 	for i := 0; i < 0x50; i++ {
@@ -239,6 +241,7 @@ func (c *CHIP8) Cycle() {
 		c.soundTimer--
 	}
 
+	c.resetKeys()
 }
 
 func (c *CHIP8) debugDraw() {
@@ -263,7 +266,6 @@ func (c *CHIP8) exec0NNNN(addr uint16) {
 func (c *CHIP8) exec00E0() {
 	fmt.Println("Executing 00E0")
 	c.Gfx = [Width][Height]byte{}
-	c.DrawFlag = true
 	c.pc += 2
 }
 
@@ -471,15 +473,11 @@ func (c *CHIP8) execFX07(x byte) {
 
 func (c *CHIP8) execFX0A(x byte) {
 	fmt.Println("Executing FX0A")
-
-	for {
-		for i, k := range c.keys {
-			fmt.Println(k) // this opcode somehow only works with this println in it...?
-			if k == 1 {
-				c.v[x] = byte(i) // value of the key
-				c.pc += 2
-				return
-			}
+	for i, k := range c.keys {
+		if k == 1 {
+			c.v[x] = byte(i) // value of the key
+			c.pc += 2
+			return
 		}
 	}
 }

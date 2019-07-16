@@ -5,7 +5,6 @@ import (
 	e "github.com/hajimehoshi/ebiten"
 	"image/color"
 	"log"
-	"time"
 )
 
 const scale = 16
@@ -13,6 +12,7 @@ const scale = 16
 var c *chip8.CHIP8
 
 func run(screen *e.Image) error {
+	c.Cycle()
 	getKeyState()
 	if c.DrawFlag {
 		for x := 0; x < chip8.Width; x++ {
@@ -22,7 +22,10 @@ func run(screen *e.Image) error {
 				}
 			}
 		}
+
+		c.DrawFlag = false
 	}
+
 	return nil
 }
 
@@ -33,20 +36,12 @@ func main() {
 		log.Fatal("Could not load ROM")
 	}
 
-	go func() {
-		for range time.Tick(16 * time.Nanosecond) {
-			c.Cycle()
-		}
-	}()
-
 	if err := e.Run(run, chip8.Width, chip8.Height, scale, "CHIP-8"); err != nil {
 		log.Fatal(err)
 	}
 }
 
 func getKeyState() {
-	c.ResetKeys()
-
 	if e.IsKeyPressed(e.Key1) {
 		c.SendKeyPress(chip8.KeyMap[e.Key1.String()])
 	}
