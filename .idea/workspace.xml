@@ -2,9 +2,42 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1b225d14-5d0a-4f33-8fb9-2ee41e8bd5be" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chip8/chip8.go" beforeDir="false" afterPath="$PROJECT_DIR$/chip8/chip8.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/gui/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/gui/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/gui/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server/server.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/web/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/wasm/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/15PUZZLE" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/15PUZZLE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/BC_test" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/BC_test" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/BLINKY" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/BLINKY" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/BLITZ" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/BLITZ" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/BRIX" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/BRIX" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/CONNECT4" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/CONNECT4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/GUESS" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/GUESS" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/HIDDEN" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/HIDDEN" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/INVADERS" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/INVADERS" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/KALEID" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/KALEID" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/MAZE" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/MAZE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/MERLIN" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/MERLIN" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/MISSILE" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/MISSILE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/PONG" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/PONG" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/PONG1" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/PONG1" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/PONG2" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/PONG2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/PUZZLE" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/PUZZLE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/SYZYGY" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/SYZYGY" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/TANK" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/TANK" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/TETRIS" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/TETRIS" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/TICTAC" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/TICTAC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/UFO" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/UFO" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/VBRIX" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/VBRIX" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/VERS" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/VERS" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/roms/WIPEOFF" beforeDir="false" afterPath="$PROJECT_DIR$/static/roms/WIPEOFF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/PONG1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/main.wasm" beforeDir="false" afterPath="$PROJECT_DIR$/static/main.wasm" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -15,42 +48,12 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cmd/gui/main.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="14" column="8" lean-forward="true" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/chip8/chip8.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="226">
-              <caret line="272" column="33" selection-start-line="272" selection-start-column="33" selection-end-line="272" selection-end-column="33" />
+            <state relative-caret-position="397">
+              <caret line="81" column="16" selection-start-line="81" selection-start-column="16" selection-end-line="81" selection-end-column="16" />
               <folding>
-                <element signature="e#15#104#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cmd/web/main.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="48" column="51" selection-start-line="48" selection-start-column="51" selection-end-line="48" selection-end-column="51" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/web/server.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="11" selection-start-line="11" selection-end-line="11" />
-              <folding>
-                <element signature="e#14#43#0" expanded="true" />
+                <element signature="e#15#85#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -66,10 +69,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/go.sum">
+        <entry file="file://$PROJECT_DIR$/cmd/wasm/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="42" selection-start-line="42" selection-end-line="42" />
+            <state relative-caret-position="-195">
+              <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+              <folding>
+                <element signature="e#14#54#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -77,8 +83,59 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/go.mod">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="5" selection-start-line="5" selection-end-line="5" />
+            <state relative-caret-position="45">
+              <caret line="3" selection-start-line="3" selection-end-line="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Go/src/syscall/js/js.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="172">
+              <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Go/src/syscall/js/func.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/cmd/server/main.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+              <folding>
+                <element signature="e#14#43#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/index.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/wasm_exec.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -121,6 +178,7 @@
       <find>FX07</find>
       <find>drawfl</find>
       <find>true</find>
+      <find>windows</find>
     </findStrings>
   </component>
   <component name="GOROOT" path="C:\Go" />
@@ -135,7 +193,6 @@
         <option value="$PROJECT_DIR$/experimental/chip8-switch.go" />
         <option value="$PROJECT_DIR$/experimental/chip8-fp.go" />
         <option value="$PROJECT_DIR$/system/font.go" />
-        <option value="$PROJECT_DIR$/go.mod" />
         <option value="$PROJECT_DIR$/server.go" />
         <option value="$PROJECT_DIR$/server/server.go" />
         <option value="$PROJECT_DIR$/cmd/main.go" />
@@ -143,16 +200,20 @@
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/system/chip8.go" />
         <option value="$PROJECT_DIR$/system/chip8.go" />
-        <option value="$PROJECT_DIR$/cmd/web/main.go" />
-        <option value="$PROJECT_DIR$/web/server.go" />
         <option value="$PROJECT_DIR$/cmd/gui/main.go" />
+        <option value="$PROJECT_DIR$/web/server.go" />
+        <option value="$PROJECT_DIR$/static/index.html" />
         <option value="$PROJECT_DIR$/chip8/chip8.go" />
+        <option value="$PROJECT_DIR$/cmd/web/main.go" />
+        <option value="$PROJECT_DIR$/go.mod" />
+        <option value="$PROJECT_DIR$/cmd/wasm/main.go" />
+        <option value="$PROJECT_DIR$/cmd/server/server.go" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="950" />
-    <option name="width" value="979" />
+    <option name="width" value="980" />
     <option name="height" value="1040" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -185,13 +246,18 @@
               <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
               <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
               <item name="cmd" type="462c0819:PsiDirectoryNode" />
-              <item name="gui" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
               <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
               <item name="cmd" type="462c0819:PsiDirectoryNode" />
-              <item name="web" type="462c0819:PsiDirectoryNode" />
+              <item name="wasm" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CHIP-8" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CHIP-8" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -209,26 +275,26 @@
     <property name="configurable.Project.GOPATH.is.expanded" value="true" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.import.settings.migrated" value="true" />
-    <property name="last_opened_file_path" value="$USER_HOME$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\go\src\CHIP-8\cmd\server" />
+      <recent name="C:\Users\justi\go\src\CHIP-8\cmd\wasm" />
+      <recent name="C:\Users\justi\go\src\CHIP-8\cmd" />
+      <recent name="C:\Users\justi\go\src\CHIP-8\static\ROMs" />
+      <recent name="C:\Users\justi\go\src\CHIP-8\static" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\justi\go\src\CHIP-8\static" />
       <recent name="C:\Users\Justin\go\src\CHIP-8\web" />
       <recent name="C:\Users\Justin\go\src\CHIP-8\cmd" />
       <recent name="C:\Users\justi\go\src\CHIP-8" />
       <recent name="C:\Users\Justin\go\src\CHIP8\system" />
-      <recent name="C:\Users\Justin\go\src\CHIP8\roms" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\justi\go\src\CHIP-8\static" />
-      <recent name="C:\Users\Justin\go\src\CHIP-8\cmd\web" />
-      <recent name="C:\Users\Justin\go\src\CHIP-8\web" />
-      <recent name="C:\Users\Justin\go\src\CHIP8\experimental" />
-      <recent name="C:\Users\Justin\go\src\CHIP8\roms" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -243,7 +309,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Build.go build main.go">
+  <component name="RunManager" selected="Go Build.go build server.go">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="CHIP-8" />
       <working_directory value="$PROJECT_DIR$/" />
@@ -265,23 +331,23 @@
     </configuration>
     <configuration name="go build server.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="CHIP-8" />
-      <working_directory value="$PROJECT_DIR$/web" />
+      <working_directory value="C:\Users\justi\go\src\CHIP-8" />
       <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/web/server.go" />
+      <filePath value="C:\Users\justi\go\src\CHIP-8\cmd\server\main.go" />
       <package value="CHIP8" />
       <directory value="$PROJECT_DIR$/" />
       <method v="2" />
     </configuration>
-    <configuration name="go build wasm main.go" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <configuration name="go build wasm main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="CHIP-8" />
-      <working_directory value="C:\Users\Justin\go\src\CHIP-8" />
-      <go_parameters value="-i -o web\main.wasm" />
+      <working_directory value="C:\Users\justi\go\src\CHIP-8" />
+      <go_parameters value="-i -o static\main.wasm" />
       <envs>
         <env name="GOOS" value="js" />
         <env name="GOARCH" value="wasm" />
       </envs>
       <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/cmd/web/main.go" />
+      <filePath value="C:\Users\justi\go\src\CHIP-8\cmd\wasm\main.go" />
       <option name="run" value="false" />
       <method v="2" />
     </configuration>
@@ -297,14 +363,15 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Go Build.go build main.go" />
       <item itemvalue="Go Build.go build wasm main.go" />
+      <item itemvalue="Go Build.go build main.go" />
       <item itemvalue="Go Build.go build server.go" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Build.go build wasm main.go" />
         <item itemvalue="Go Build.go build server.go" />
+        <item itemvalue="Go Build.go build main.go" />
       </list>
     </recent_temporary>
   </component>
@@ -312,12 +379,12 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2295302" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24630873" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3286119" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3186969" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.19830029" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.23937677" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -325,9 +392,9 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.14305949" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.3286119" />
-      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" weight="0.32936078" />
-      <window_info anchor="bottom" id="REST Client" order="12" weight="0.44617563" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32936078" />
+      <window_info anchor="bottom" id="REST Client" order="11" weight="0.44617563" />
+      <window_info anchor="bottom" id="Terminal" order="12" weight="0.10623229" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -355,40 +422,13 @@
     <MESSAGE value="update README" />
     <MESSAGE value="Fix FX0A, still buggy" />
     <MESSAGE value="GFX switch to row major order" />
-    <option name="LAST_COMMIT_MESSAGE" value="GFX switch to row major order" />
+    <MESSAGE value="architectural update" />
+    <option name="LAST_COMMIT_MESSAGE" value="architectural update" />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Go/src/image/color/color.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="5" selection-start-line="9" selection-start-column="5" selection-end-line="9" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/hajimehoshi/ebiten/ebitenutil/debugprint.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="45" column="5" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/hajimehoshi/ebiten/run.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="154" column="5" selection-start-line="154" selection-start-column="5" selection-end-line="154" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../github.com/hajimehoshi/ebiten/internal/uidriver/glfw/ui.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="573" selection-start-line="573" selection-end-line="573" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../github.com/hajimehoshi/ebiten/image.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-669">
@@ -478,13 +518,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.wasm" />
-    <entry file="file://C:/Go/src/syscall/js/func.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="73" column="17" lean-forward="true" selection-start-line="73" selection-start-column="17" selection-end-line="73" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
@@ -495,39 +528,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Go/src/syscall/js/js.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1243">
-          <caret line="99" column="5" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/main.wasm">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/wasm_exec.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/hajimehoshi/ebiten@v1.9.3/run.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="142" column="5" selection-start-line="142" selection-start-column="5" selection-end-line="142" selection-end-column="5" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://C:/Go/src/net/http/fs.go">
       <provider selected="true" editor-type-id="text-editor">
@@ -547,13 +549,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
           <caret line="350" column="5" selection-start-line="350" selection-start-column="5" selection-end-line="350" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Go/src/builtin/builtin.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="193" column="5" selection-start-line="193" selection-start-column="5" selection-end-line="193" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -578,15 +573,65 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/server.go">
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/hajimehoshi/ebiten@v1.9.3/run.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        <state relative-caret-position="156">
+          <caret line="168" column="5" selection-start-line="168" selection-start-column="5" selection-end-line="168" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/nsf/termbox-go@v0.0.0-20170211012700-3540b76b9c77/api_common.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="11" column="4" selection-start-line="11" selection-start-column="4" selection-end-line="11" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/nsf/termbox-go@v0.0.0-20170211012700-3540b76b9c77/api.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-879">
+          <caret line="22" column="5" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/builtin/builtin.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="232" column="5" selection-start-line="232" selection-start-column="5" selection-end-line="232" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/nsf/termbox-go@v0.0.0-20190624072549-eeb6cd0a1762/api.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="17" lean-forward="true" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
           <folding>
-            <element signature="e#14#43#0" expanded="true" />
+            <element signature="e#37#167#0" expanded="true" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/veandco/go-sdl2@v0.3.3/sdl/events.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/veandco/go-sdl2@v0.3.3/sdl/sdl_cgo_static.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/veandco/go-sdl2@v0.3.3/sdl/sdl_cgo.go">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/veandco/go-sdl2@v0.3.3/sdl/sdl.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="7" lean-forward="true" selection-start-line="4" selection-start-column="7" selection-end-line="4" selection-end-column="7" />
+          <folding>
+            <element signature="e#406#439#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/veandco/go-sdl2@v0.3.3/sdl/log.c">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/opcode_table.txt">
       <provider selected="true" editor-type-id="text-editor">
@@ -597,38 +642,102 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/go.sum">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="42" selection-start-line="42" selection-end-line="42" />
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/go.mod">
+    <entry file="file://$PROJECT_DIR$/../../pkg/mod/github.com/veandco/go-sdl2@v0.3.3/sdl/audio.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        <state relative-caret-position="45">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+          <folding>
+            <element signature="e#596#638#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cmd/web/main.go">
+    <entry file="file://$PROJECT_DIR$/static/wasm_exec.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="48" column="51" selection-start-line="48" selection-start-column="51" selection-end-line="48" selection-end-column="51" />
+        <state relative-caret-position="150">
+          <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="7" selection-start-line="20" selection-start-column="7" selection-end-line="20" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/syscall/js/func.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/syscall/js/js.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/time/sleep.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="226">
+          <caret line="155" column="5" selection-start-line="155" selection-start-column="5" selection-end-line="155" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cmd/gui/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="14" column="8" lean-forward="true" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
+        <state relative-caret-position="270">
+          <caret line="33" column="29" lean-forward="true" selection-start-line="33" selection-start-column="29" selection-end-line="33" selection-end-column="29" />
+          <folding>
+            <element signature="e#14#74#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chip8/chip8.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="272" column="33" selection-start-line="272" selection-start-column="33" selection-end-line="272" selection-end-column="33" />
+        <state relative-caret-position="397">
+          <caret line="81" column="16" selection-start-line="81" selection-start-column="16" selection-end-line="81" selection-end-column="16" />
           <folding>
-            <element signature="e#15#104#0" expanded="true" />
+            <element signature="e#15#85#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/go.mod">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmd/wasm/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-195">
+          <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+          <folding>
+            <element signature="e#14#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cmd/server/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="e#14#43#0" expanded="true" />
           </folding>
         </state>
       </provider>

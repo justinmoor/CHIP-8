@@ -2,12 +2,20 @@
 <head>
     <meta charset="utf-8">
     <script src="wasm_exec.js"></script>
+</head>
+<body>
+    <select>
+        <option value="PONG1">PONG (1 player)</option>
+        <option value="PONG2">PONG (2 players)</option>
+        <option value="INVADERS">SPACE INVADERS</option>
+    </select>
+    <br>
+    <br>
     <script>
         const go = new Go();
         WebAssembly.instantiateStreaming(fetch("main.wasm"), go.importObject).then((result) => {
             go.run(result.instance);
         });
     </script>
-</head>
-<body></body>
+</body>
 </html>
