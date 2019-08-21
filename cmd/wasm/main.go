@@ -3,6 +3,7 @@ package main
 import (
 	"CHIP-8/chip8"
 	"syscall/js"
+	"time"
 )
 
 var (
@@ -10,6 +11,7 @@ var (
 	width                                float64 = 64
 	height                               float64 = 32
 	c                                    *chip8.CHIP8
+	then                                 time.Time
 )
 
 const scale = 16
@@ -49,6 +51,12 @@ func main() {
 	setup()
 	c = chip8.New()
 
+	go func() {
+		for range time.After(16 * time.Microsecond) {
+			c.Cycle()
+		}
+	}()
+
 	if err := c.LoadRomHTTP("http://localhost:8000/roms/PONG1"); err != nil {
 		panic(err)
 	}
@@ -56,7 +64,7 @@ func main() {
 	var renderer js.Func
 	renderer = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		ctx.Call("clearRect", 0, 0, width, height)
-		c.Cycle()
+
 		if c.DrawFlag {
 			for x := 0; x < chip8.Width; x++ {
 				for y := 0; y < chip8.Height; y++ {
