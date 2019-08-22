@@ -4,7 +4,6 @@ import (
 	"CHIP-8/chip8"
 	"github.com/nsf/termbox-go"
 	"os"
-	"time"
 )
 
 var c *chip8.CHIP8
@@ -18,7 +17,8 @@ func main() {
 	defer termbox.Close()
 
 	c = chip8.New()
-	err = c.Load("../../static/roms/INVADERS")
+	c.Logging = false
+	err = c.Load("../../static/roms/TICTAC")
 	if err != nil {
 		panic(err)
 	}
@@ -30,8 +30,6 @@ func main() {
 			eventQueue <- termbox.PollEvent()
 		}
 	}()
-
-	tick := time.Tick(2 * time.Millisecond)
 
 	for {
 		select {
@@ -45,9 +43,11 @@ func main() {
 					c.SendKeyPress(k)
 				}
 			}
-		case <-tick:
+		case <-c.Timer.C:
 			c.Cycle()
-			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+			if err := termbox.Clear(termbox.ColorDefault, termbox.ColorDefault); err != nil {
+				panic(err)
+			}
 			if c.DrawFlag {
 				for x := 0; x < chip8.Width; x++ {
 					for y := 0; y < chip8.Height; y++ {
@@ -58,7 +58,9 @@ func main() {
 				}
 			}
 
-			termbox.Flush()
+			if err := termbox.Flush(); err != nil {
+				panic(err)
+			}
 		}
 	}
 }

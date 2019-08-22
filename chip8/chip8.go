@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math/rand"
 	"net/http"
 	"os"
@@ -29,7 +30,8 @@ type CHIP8 struct {
 	DrawFlag   bool
 	delayTimer byte
 	soundTimer byte
-	timer      *time.Ticker
+	Timer      *time.Ticker
+	Logging    bool
 }
 
 type cpu struct {
@@ -52,17 +54,13 @@ func (c *CHIP8) SendKeyPress(k uint8) {
 	c.keys[k] = 1
 }
 
-func (c *CHIP8) resetKeys() {
-	c.keys = [16]byte{}
-}
-
 func (c *CHIP8) initialize() {
 	c.pc = 0x200 // = 512: initial point where a program will start
 	c.opcode = 0x00
 	c.i = 0x00
 	c.sp = 0x00
 	c.DrawFlag = false
-	c.timer = time.NewTicker(16 * time.Millisecond)
+	c.Timer = time.NewTicker(2 * time.Millisecond)
 
 	// clear all the memory
 	c.memory = [4096]byte{}
@@ -94,7 +92,7 @@ func (c *CHIP8) Cycle() {
 	case 0x0000:
 		switch c.opcode & 0x00FF {
 		case 0x0000:
-			c.exec0NNNN(addr)
+			c.exec0NNN(addr)
 			break
 		case 0x00E0:
 			c.exec00E0()
@@ -256,36 +254,36 @@ func (c *CHIP8) debugDraw() {
 	fmt.Println()
 }
 
-func (c *CHIP8) exec0NNNN(addr uint16) {
-	//fmt.Println("Executing 0NNNN")
+func (c *CHIP8) exec0NNN(addr uint16) {
+	c.Log("0NNN")
 }
 
 func (c *CHIP8) exec00E0() {
-	//fmt.Println("Executing 00E0")
+	c.Log("00E0")
 	c.Gfx = [Width][Height]byte{}
 	c.pc += 2
 }
 
 func (c *CHIP8) exec00EE() {
-	//fmt.Println("Executing 00EE")
+	c.Log("00EE")
 	c.sp--
 	c.pc = c.stack[c.sp]
 }
 
 func (c *CHIP8) exec1NNN(addr uint16) {
-	//fmt.Println("Executing 1NNN")
+	c.Log("1NNN")
 	c.pc = addr
 }
 
 func (c *CHIP8) exec2NNN(addr uint16) {
-	//fmt.Println("Executing 2NNN")
+	c.Log("2NNN")
 	c.stack[c.sp] = c.pc + 2
 	c.sp++
 	c.pc = addr
 }
 
 func (c *CHIP8) exec3XNN(x, nn byte) {
-	//fmt.Println("Executing 3XNN")
+	c.Log("3XNN")
 	if c.v[x] == nn {
 		c.pc += 4
 		return
@@ -294,7 +292,7 @@ func (c *CHIP8) exec3XNN(x, nn byte) {
 }
 
 func (c *CHIP8) exec4XNN(x, nn byte) {
-	//fmt.Println("Executing 5XY0")
+	c.Log("4XNN")
 	if c.v[x] != nn {
 		c.pc += 4
 		return
@@ -303,7 +301,7 @@ func (c *CHIP8) exec4XNN(x, nn byte) {
 }
 
 func (c *CHIP8) exec5XY0(x, y byte) {
-	//fmt.Println("Executing 5XY0")
+	c.Log("5XY0")
 	if c.v[x] == c.v[y] {
 		c.pc += 4
 		return
@@ -312,43 +310,43 @@ func (c *CHIP8) exec5XY0(x, y byte) {
 }
 
 func (c *CHIP8) exec6XNN(x, nn byte) {
-	//fmt.Println("Executing 6XNN")
+	c.Log("6XNN")
 	c.v[x] = nn
 	c.pc += 2
 }
 
 func (c *CHIP8) exec7XNN(x, nn byte) {
-	//fmt.Println("Executing 7XNN")
+	c.Log("7XNN")
 	c.v[x] += nn
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY0(x, y byte) {
-	//fmt.Println("Executing 8XY0")
+	c.Log("8XY0")
 	c.v[x] = c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY1(x, y byte) {
-	//fmt.Println("Executing 8XY1")
+	c.Log("8XY1")
 	c.v[x] |= c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY2(x, y byte) {
-	//fmt.Println("Executing 8XY2")
+	c.Log("8XY2")
 	c.v[x] &= c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY3(x, y byte) {
-	//fmt.Println("Executing 8XY3")
+	c.Log("8XY3")
 	c.v[x] ^= c.v[y]
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY4(x, y byte) {
-	//fmt.Println("Executing 8XY4")
+	c.Log("8XY4")
 	if (c.v[y] + c.v[x]) > 0xFF {
 		c.v[0xF] = 1
 	} else {
@@ -359,7 +357,7 @@ func (c *CHIP8) exec8XY4(x, y byte) {
 }
 
 func (c *CHIP8) exec8XY5(x, y byte) {
-	//fmt.Println("Executing 8XY5")
+	c.Log("8XY5")
 	if c.v[y] > c.v[x] {
 		c.v[0xF] = 0
 	} else {
@@ -370,14 +368,14 @@ func (c *CHIP8) exec8XY5(x, y byte) {
 }
 
 func (c *CHIP8) exec8XY6(x, y byte) {
-	//fmt.Println("Executing 8XY6")
+	c.Log("8XY6")
 	c.v[0xF] = c.v[x] & 0x1
 	c.v[x] >>= 1
 	c.pc += 2
 }
 
 func (c *CHIP8) exec8XY7(x, y byte) {
-	//fmt.Println("Executing 8XY7")
+	c.Log("8XY7")
 	if c.v[y] > c.v[x] {
 		c.v[0xF] = 1
 	} else {
@@ -388,14 +386,14 @@ func (c *CHIP8) exec8XY7(x, y byte) {
 }
 
 func (c *CHIP8) exec8XYE(x, y byte) {
-	//fmt.Println("Executing 8XYE")
+	c.Log("8XYE")
 	c.v[0xF] = (c.v[x] >> 7) & 0x1
 	c.v[x] <<= 1
 	c.pc += 2
 }
 
 func (c *CHIP8) exec9XY0(x, y byte) {
-	//fmt.Println("Executing 9XY0")
+	c.Log("9XY0")
 	if c.v[x] != c.v[y] {
 		c.pc += 4
 		return
@@ -404,25 +402,25 @@ func (c *CHIP8) exec9XY0(x, y byte) {
 }
 
 func (c *CHIP8) execANNN(addr uint16) {
-	//fmt.Println("Executing ANNN")
+	c.Log("ANNN")
 	c.i = addr
 	c.pc += 2
 }
 
 func (c *CHIP8) execBNNN(addr uint16) {
-	//fmt.Println("Executing BNNNN")
+	c.Log("BNNN")
 	c.pc = addr + uint16(c.v[0x0])
 }
 
 func (c *CHIP8) execCXNN(x, nn byte) {
-	//fmt.Println("Executing CXNN")
+	c.Log("CXNN")
 	b := randomByte()
 	c.v[x] = b & nn
 	c.pc += 2
 }
 
 func (c *CHIP8) execDXYN(x, y, n byte) {
-	//fmt.Println("Executing DXYN")
+	c.Log("DXYN")
 	vx := c.v[x]
 	vy := c.v[y]
 	var pixel byte
@@ -445,33 +443,31 @@ func (c *CHIP8) execDXYN(x, y, n byte) {
 }
 
 func (c *CHIP8) execEX9E(x byte) {
-	//fmt.Println("Executing EX9E")
-	if c.keys[c.v[x]] != 0 {
-		c.pc += 4
-		return
+	c.Log("EX9E")
+	if c.keys[c.v[x]] == 1 {
+		c.pc += 2
 	}
 	c.keys[c.v[x]] = 0
 	c.pc += 2
 }
 
 func (c *CHIP8) execEXA1(x byte) {
-	//fmt.Println("Executing EXA1")
+	c.Log("EXA1")
 	if c.keys[c.v[x]] == 0 {
-		c.pc += 4
-		return
+		c.pc += 2
 	}
 	c.keys[c.v[x]] = 0
 	c.pc += 2
 }
 
 func (c *CHIP8) execFX07(x byte) {
-	//fmt.Println("Executing FX07")
+	c.Log("FX07")
 	c.v[x] = c.delayTimer
 	c.pc += 2
 }
 
 func (c *CHIP8) execFX0A(x byte) {
-	//fmt.Println("Executing FX0A")
+	c.Log("FX0A")
 	for i, k := range c.keys {
 		if k == 1 {
 			c.v[x] = byte(i) // value of the key
@@ -482,31 +478,31 @@ func (c *CHIP8) execFX0A(x byte) {
 }
 
 func (c *CHIP8) execFX15(x byte) {
-	//fmt.Println("Executing FX15")
+	c.Log("FX15")
 	c.delayTimer = c.v[x]
 	c.pc += 2
 }
 
 func (c *CHIP8) execFX18(x byte) {
-	//fmt.Println("Executing FX18")
+	c.Log("FX18")
 	c.soundTimer = c.v[x]
 	c.pc += 2
 }
 
 func (c *CHIP8) execFX1E(x byte) {
-	//fmt.Println("Executing FX1E")
+	c.Log("FX1E")
 	c.i += uint16(c.v[x])
 	c.pc += 2
 }
 
 func (c *CHIP8) execFX29(x byte) {
-	//fmt.Println("Executing FX29")
+	c.Log("FX29")
 	c.i = uint16(5 * c.v[x])
 	c.pc += 2
 }
 
 func (c *CHIP8) execFX33(x byte) {
-	//fmt.Println("Executing FX33")
+	c.Log("FX33")
 	c.memory[c.i] = c.v[x] / 100
 	c.memory[c.i+1] = (c.v[x] / 10) % 10
 	c.memory[c.i+2] = (c.v[x] % 100) % 10
@@ -514,7 +510,7 @@ func (c *CHIP8) execFX33(x byte) {
 }
 
 func (c *CHIP8) execFX55(x byte) {
-	//fmt.Println("Executing FX55")
+	c.Log("FX55")
 	for i := byte(0); i <= x; i++ {
 		c.memory[c.i+uint16(i)] = c.v[i]
 	}
@@ -522,7 +518,7 @@ func (c *CHIP8) execFX55(x byte) {
 }
 
 func (c *CHIP8) execFX65(x byte) {
-	//fmt.Println("Executing FX65")
+	c.Log("FX65")
 	for i := byte(0); i <= x; i++ {
 		c.v[i] = c.memory[c.i+uint16(i)]
 	}
@@ -569,6 +565,16 @@ func (c *CHIP8) Load(romName string) error {
 		c.memory[i+0x200] = buffer[i]
 	}
 	return nil
+}
+
+func (c *CHIP8) Log(opcode string) {
+	if c.Logging {
+		log.Printf("PC: %v, Executing: %v", c.pc, opcode)
+	}
+}
+
+func (c *CHIP8) String() string {
+	return fmt.Sprintf("PC: %v\n", c.pc)
 }
 
 func randomByte() byte {
