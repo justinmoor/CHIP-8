@@ -3,7 +3,6 @@ package main
 import (
 	"CHIP-8/chip8"
 	"syscall/js"
-	"time"
 )
 
 var (
@@ -11,7 +10,6 @@ var (
 	width                                float64 = 64
 	height                               float64 = 32
 	c                                    *chip8.CHIP8
-	then                                 time.Time
 )
 
 const scale = 16
@@ -49,28 +47,46 @@ var keyEvent = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 
 func main() {
 	setup()
+	quit := make(chan struct{})
 	c = chip8.New()
+	c.Logging = true
 
-	go func() {
-		for range time.After(16 * time.Microsecond) {
-			c.Cycle()
-		}
-	}()
+	gfxBuffer := make(chan [chip8.Width][chip8.Height]byte, 10)
+	var gfx [chip8.Width][chip8.Height]byte
 
+	// load a ROM from the static files
 	if err := c.LoadRomHTTP("http://localhost:8000/roms/PONG1"); err != nil {
 		panic(err)
 	}
 
+	// start the emulator
+	go func() {
+		for range c.Timer.C {
+			c.Cycle()
+			if c.DrawFlag {
+				select {
+				case gfxBuffer <- c.Gfx:
+				default:
+				}
+				c.DrawFlag = false
+			}
+		}
+	}()
+
+	// web renderer
 	var renderer js.Func
 	renderer = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 		ctx.Call("clearRect", 0, 0, width, height)
 
-		if c.DrawFlag {
-			for x := 0; x < chip8.Width; x++ {
-				for y := 0; y < chip8.Height; y++ {
-					if c.Gfx[x][y] == 1 {
-						ctx.Call("fillRect", x, y, 1, 1)
-					}
+		select {
+		case gfx = <-gfxBuffer:
+		default:
+		}
+
+		for x := 0; x < chip8.Width; x++ {
+			for y := 0; y < chip8.Height; y++ {
+				if gfx[x][y] == 1 {
+					ctx.Call("fillRect", x, y, 1, 1)
 				}
 			}
 		}
@@ -81,5 +97,5 @@ func main() {
 
 	window.Call("requestAnimationFrame", renderer)
 
-	select {}
+	<-quit
 }
