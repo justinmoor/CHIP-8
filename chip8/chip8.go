@@ -348,9 +348,9 @@ func (c *CHIP8) exec8XY3(x, y byte) {
 func (c *CHIP8) exec8XY4(x, y byte) {
 	c.Log("8XY4")
 	if (c.v[y] + c.v[x]) > 0xFF {
-		c.v[0xF] = 1
-	} else {
 		c.v[0xF] = 0
+	} else {
+		c.v[0xF] = 1
 	}
 	c.v[x] += c.v[y]
 	c.pc += 2
