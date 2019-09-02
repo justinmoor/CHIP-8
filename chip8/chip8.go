@@ -46,7 +46,7 @@ type cpu struct {
 
 func New() *CHIP8 {
 	c := new(CHIP8)
-	c.initialize()
+	c.Reset()
 	return c
 }
 
@@ -54,13 +54,13 @@ func (c *CHIP8) SendKeyPress(k uint8) {
 	c.keys[k] = 1
 }
 
-func (c *CHIP8) initialize() {
+func (c *CHIP8) Reset() {
 	c.pc = 0x200 // = 512: initial point where a program will start
 	c.opcode = 0x00
 	c.i = 0x00
 	c.sp = 0x00
 	c.DrawFlag = false
-	c.Timer = time.NewTicker(2 * time.Millisecond)
+	c.Timer = time.NewTicker(50 * time.Millisecond)
 
 	// clear all the memory
 	c.memory = [4096]byte{}

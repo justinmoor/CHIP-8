@@ -23,17 +23,17 @@ func main() {
 		panic(err)
 	}
 
-	eventQueue := make(chan termbox.Event)
+	keyEvents := make(chan termbox.Event)
 
 	go func() {
 		for {
-			eventQueue <- termbox.PollEvent()
+			keyEvents <- termbox.PollEvent()
 		}
 	}()
 
 	for {
 		select {
-		case ev := <-eventQueue:
+		case ev := <-keyEvents:
 			if ev.Type == termbox.EventKey {
 				if ev.Key == termbox.KeyEsc {
 					os.Exit(0)
