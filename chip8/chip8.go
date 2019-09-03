@@ -60,7 +60,7 @@ func (c *CHIP8) Reset() {
 	c.i = 0x00
 	c.sp = 0x00
 	c.DrawFlag = false
-	c.Timer = time.NewTicker(50 * time.Millisecond)
+	c.Timer = time.NewTicker(2 * time.Millisecond)
 
 	// clear all the memory
 	c.memory = [4096]byte{}

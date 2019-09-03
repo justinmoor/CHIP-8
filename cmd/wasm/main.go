@@ -11,7 +11,9 @@ var (
 	width                                    float64 = 64
 	height                                   float64 = 32
 	c                                        *chip8.CHIP8
-	reset                                    chan string
+	reset                                    chan struct{}
+	gfxChan                                  chan [chip8.Width][chip8.Height]byte
+	game                                     string
 )
 
 const scale = 16
@@ -23,7 +25,8 @@ func setupHTML() {
 
 	gameOpts = doc.Call("createElement", "select")
 	doc.Set("onchange", gameChange)
-	games := [...]string{"PONG", "INVADERS"}
+	games := [...]string{"PONG", "PONG2", "INVADERS", "15PUZZLE", "BLINKY", "BLITZ", "BRIX", "CONNECT4", "GUESS", "HIDDEN", "KALEID",
+		"MAZE", "MERLIN", "MISSILE", "PUZZLE", "SYZYGY", "TANK", "TETRIS", "TICTAC", "UFO", "VBRIX", "VERS", "WIPEOFF"}
 
 	for _, e := range games {
 		game := doc.Call("createElement", "option")
@@ -55,7 +58,8 @@ func setupHTML() {
 
 var gameChange = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 	e := args[0]
-	reset <- e.Get("target").Get("value").String()
+	game = e.Get("target").Get("value").String()
+	close(reset)
 	return nil
 })
 
@@ -71,17 +75,16 @@ var keyEvent = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
 })
 
 func main() {
-	//quit := make(chan struct{})
-	reset = make(chan string)
-
 	setupHTML()
+	game = "PONG"
 
-	gfxChan := make(chan [chip8.Width][chip8.Height]byte, 10)
-	var gfxBuffer [chip8.Width][chip8.Height]byte
+	for {
+		reset = make(chan struct{})
+		gfxChan = make(chan [chip8.Width][chip8.Height]byte, 10)
+		var gfxBuffer [chip8.Width][chip8.Height]byte
 
-	LoadAndStartEmu("PONG", gfxChan)
+		loadAndStartEmu(game, gfxChan)
 
-	go func() {
 		// web renderer
 		var renderer js.Func
 		renderer = js.FuncOf(func(this js.Value, args []js.Value) interface{} {
@@ -106,12 +109,15 @@ func main() {
 
 		window.Call("requestAnimationFrame", renderer)
 
-	}()
+		select {
+		case <-reset:
+			continue
+		}
+	}
 
-	select {}
 }
 
-func LoadAndStartEmu(game string, gfxChan chan [chip8.Width][chip8.Height]byte) {
+func loadAndStartEmu(game string, gfxChan chan [chip8.Width][chip8.Height]byte) {
 	c = chip8.New()
 	c.Logging = false
 
@@ -123,18 +129,15 @@ func LoadAndStartEmu(game string, gfxChan chan [chip8.Width][chip8.Height]byte) 
 	// start the emulator
 	go func() {
 		for range c.Timer.C {
-			c.Cycle()
-			if c.DrawFlag {
-				select {
-				case gfxChan <- c.Gfx:
-				case newGame := <-reset:
-					c.Reset()
-					if err := c.LoadRomHTTP(fmt.Sprintf("http://localhost:8000/roms/%v", newGame)); err != nil {
-						panic(err)
-					}
-				default:
+			select {
+			case <-reset:
+				return
+			default:
+				c.Cycle()
+				if c.DrawFlag {
+					gfxChan <- c.Gfx
+					c.DrawFlag = false
 				}
-				c.DrawFlag = false
 			}
 		}
 	}()
