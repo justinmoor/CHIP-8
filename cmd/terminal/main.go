@@ -18,11 +18,12 @@ func main() {
 	}
 	defer termbox.Close()
 
+	rom := os.Args[1]
 	c = chip8.New()
 	c.Logging = false
-	err = c.Load(fmt.Sprintf("../../static/roms/%v", os.Args[1]))
+	err = c.Load(fmt.Sprintf("../../static/roms/%v", rom))
 	if err != nil {
-		panic(err)
+		log.Fatalf("Could not find rom %v", rom)
 	}
 
 	keyEvents := make(chan termbox.Event)
