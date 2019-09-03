@@ -2,6 +2,7 @@ package main
 
 import (
 	"CHIP-8/chip8"
+	"fmt"
 	"github.com/nsf/termbox-go"
 	"log"
 	"os"
@@ -19,7 +20,7 @@ func main() {
 
 	c = chip8.New()
 	c.Logging = false
-	err = c.Load("../../static/roms/PONG")
+	err = c.Load(fmt.Sprintf("../../static/roms/%v", os.Args[1]))
 	if err != nil {
 		panic(err)
 	}
