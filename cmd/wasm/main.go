@@ -3,17 +3,18 @@ package main
 import (
 	"CHIP-8/chip8"
 	"fmt"
+	"log"
 	"syscall/js"
 )
 
 var (
-	window, doc, body, canvas, ctx, gameOpts js.Value
-	width                                    float64 = 64
-	height                                   float64 = 32
-	c                                        *chip8.CHIP8
-	reset                                    chan struct{}
-	gfxChan                                  chan [chip8.Width][chip8.Height]byte
-	game                                     string
+	window, doc, body, canvas, ctx, gameOpts, beep js.Value
+	width                                          float64 = 64
+	height                                         float64 = 32
+	c                                              *chip8.CHIP8
+	reset                                          chan struct{}
+	gfxChan                                        chan [chip8.Width][chip8.Height]byte
+	game                                           string
 )
 
 const scale = 16
@@ -23,6 +24,7 @@ func setupHTML() {
 	doc = window.Get("document")
 	body = doc.Get("body")
 
+	// games options dropdown
 	gameOpts = doc.Call("createElement", "select")
 	doc.Set("onchange", gameChange)
 	games := [...]string{"PONG", "PONG2", "INVADERS", "15PUZZLE", "BLINKY", "BLITZ", "BRIX", "CONNECT4", "GUESS", "HIDDEN", "KALEID",
@@ -35,8 +37,10 @@ func setupHTML() {
 		gameOpts.Call("appendChild", game)
 	}
 
+	// add a break
 	br := doc.Call("createElement", "br")
 
+	// create canvas
 	height = window.Get("innerHeight").Float()
 	width = window.Get("innerWidth").Float()
 
@@ -48,11 +52,13 @@ func setupHTML() {
 	ctx.Set("fillStyle", "black")
 	ctx.Call("scale", scale, scale)
 
+	// add all elements to the document
 	body.Call("appendChild", gameOpts)
 	body.Call("appendChild", br)
 	body.Call("appendChild", br)
 	body.Call("appendChild", canvas)
 
+	// add eventlistener
 	doc.Call("addEventListener", "keydown", keyEvent)
 }
 
@@ -111,6 +117,7 @@ func main() {
 
 		select {
 		case <-reset:
+			// reload everything
 			continue
 		}
 	}
@@ -133,7 +140,10 @@ func loadAndStartEmu(game string, gfxChan chan [chip8.Width][chip8.Height]byte) 
 			case <-reset:
 				return
 			default:
-				c.Cycle()
+				if err := c.Cycle(); err != nil {
+					log.Fatal(err)
+				}
+
 				if c.DrawFlag {
 					gfxChan <- c.Gfx
 					c.DrawFlag = false

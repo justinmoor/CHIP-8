@@ -2,6 +2,7 @@ package chip8
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -29,7 +30,7 @@ type CHIP8 struct {
 	keys       [16]byte            // current key state
 	DrawFlag   bool
 	delayTimer byte
-	soundTimer byte
+	SoundTimer byte
 	Timer      *time.Ticker
 	Logging    bool
 }
@@ -77,7 +78,7 @@ func (c *CHIP8) Reset() {
 // decode opcode
 // execude opcode
 // update timers
-func (c *CHIP8) Cycle() {
+func (c *CHIP8) Cycle() error {
 	c.opcode = uint16(c.memory[c.pc])
 	c.opcode <<= 8
 	c.opcode |= uint16(c.memory[c.pc+1])
@@ -93,150 +94,107 @@ func (c *CHIP8) Cycle() {
 		switch c.opcode & 0x00FF {
 		case 0x0000:
 			c.exec0NNN(addr)
-			break
 		case 0x00E0:
 			c.exec00E0()
-			break
 		case 0x00EE:
 			c.exec00EE()
-			break
 		default:
-			fmt.Println("0000: Unsupported opcode")
-			break
+			return errors.New(fmt.Sprintf("0000: Unsupported opcode %v", c.opcode))
 		}
-		break
 	case 0x1000:
 		c.exec1NNN(addr)
-		break
 	case 0x2000:
 		c.exec2NNN(addr)
-		break
 	case 0x3000:
 		c.exec3XNN(x, nn)
-		break
 	case 0x4000:
 		c.exec4XNN(x, nn)
-		break
 	case 0x5000:
 		c.exec5XY0(x, y)
-		break
 	case 0x6000:
 		c.exec6XNN(x, nn)
-		break
 	case 0x7000:
 		c.exec7XNN(x, nn)
-		break
 	case 0x8000:
 		switch c.opcode & 0x000F {
 		case 0x0000:
 			c.exec8XY0(x, y)
-			break
 		case 0x0001:
 			c.exec8XY1(x, y)
-			break
 		case 0x0002:
 			c.exec8XY2(x, y)
-			break
 		case 0x0003:
 			c.exec8XY3(x, y)
-			break
 		case 0x0004:
 			c.exec8XY4(x, y)
-			break
 		case 0x0005:
 			c.exec8XY5(x, y)
-			break
 		case 0x0006:
 			c.exec8XY6(x, y)
-			break
 		case 0x0007:
 			c.exec8XY7(x, y)
-			break
 		case 0x000E:
 			c.exec8XYE(x, y)
-			break
 		default:
-			fmt.Println("8000: Unsupported opcode")
-			break
+			return errors.New(fmt.Sprintf("8000: Unsupported opcode %v", c.opcode))
 		}
 		break
 	case 0x9000:
 		c.exec9XY0(x, y)
-		break
 	case 0xA000:
 		c.execANNN(addr)
-		break
 	case 0xB000:
 		c.execBNNN(addr)
-		break
 	case 0xC000:
 		c.execCXNN(x, nn)
-		break
 	case 0xD000:
 		c.execDXYN(x, y, n)
-		break
 	case 0xE000:
 		switch c.opcode & 0x00FF {
 		case 0x009E:
 			c.execEX9E(x)
-			break
 		case 0x00A1:
 			c.execEXA1(x)
-			break
 		default:
-			fmt.Println("E000: Unsupported opcode")
-			break
+			return errors.New(fmt.Sprintf("E000: Unsupported opcode %v", c.opcode))
 		}
 		break
 	case 0xF000:
 		switch c.opcode & 0x0FF {
 		case 0x0007:
 			c.execFX07(x)
-			break
 		case 0x000A:
 			c.execFX0A(x)
-			break
 		case 0x0015:
 			c.execFX15(x)
-			break
 		case 0x0018:
 			c.execFX18(x)
-			break
 		case 0x001E:
 			c.execFX1E(x)
-			break
 		case 0x0029:
 			c.execFX29(x)
-			break
 		case 0x0033:
 			c.execFX33(x)
-			break
 		case 0x0055:
 			c.execFX55(x)
-			break
 		case 0x0065:
 			c.execFX65(x)
-			break
 		default:
-			fmt.Println("FX00: Unsupported opcode")
-			break
+			return errors.New(fmt.Sprintf("FX00: Unsupported opcode %v", c.opcode))
 		}
-		break
 	default:
-		fmt.Println("Unsupported opcode")
-		break
+		return errors.New(fmt.Sprintf("Unknown opcode: Unsupported opcode %v", c.opcode))
 	}
 
 	if c.delayTimer > 0 {
 		c.delayTimer--
 	}
 
-	if c.soundTimer > 0 {
-		if c.soundTimer == 1 {
-			//	fmt.Println("Beep")
-		}
-		c.soundTimer--
+	if c.SoundTimer > 0 {
+		c.SoundTimer--
 	}
+
+	return nil
 }
 
 func (c *CHIP8) debugDraw() {
@@ -485,7 +443,7 @@ func (c *CHIP8) execFX15(x byte) {
 
 func (c *CHIP8) execFX18(x byte) {
 	c.Log("FX18")
-	c.soundTimer = c.v[x]
+	c.SoundTimer = c.v[x]
 	c.pc += 2
 }
 

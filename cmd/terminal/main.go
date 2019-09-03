@@ -3,6 +3,7 @@ package main
 import (
 	"CHIP-8/chip8"
 	"github.com/nsf/termbox-go"
+	"log"
 	"os"
 )
 
@@ -18,7 +19,7 @@ func main() {
 
 	c = chip8.New()
 	c.Logging = false
-	err = c.Load("../../static/roms/TICTAC")
+	err = c.Load("../../static/roms/PONG")
 	if err != nil {
 		panic(err)
 	}
@@ -44,9 +45,11 @@ func main() {
 				}
 			}
 		case <-c.Timer.C:
-			c.Cycle()
+			if err := c.Cycle(); err != nil {
+				log.Fatal(err)
+			}
 			if err := termbox.Clear(termbox.ColorDefault, termbox.ColorDefault); err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 			if c.DrawFlag {
 				for x := 0; x < chip8.Width; x++ {
@@ -59,7 +62,7 @@ func main() {
 			}
 
 			if err := termbox.Flush(); err != nil {
-				panic(err)
+				log.Fatal(err)
 			}
 		}
 	}
