@@ -18,7 +18,7 @@ More info on compiling Go to WASM can be found [here](https://github.com/golang/
 #### Locally in your terminal
 * Just run ```go run cmd\terminal\main.go [path to any ROM]```
 
-### Known issue's
+### Known issues
 * Still somewhat buggy. For example TIC TAC TOE does not work properly.
 * I did not take the time to add the beep :(.
 * WASM build sometimes runs a bit slow.
