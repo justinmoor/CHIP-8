@@ -2,7 +2,6 @@ package main
 
 import (
 	"CHIP-8/chip8"
-	"fmt"
 	"github.com/nsf/termbox-go"
 	"log"
 	"os"
@@ -18,12 +17,12 @@ func main() {
 	}
 	defer termbox.Close()
 
-	rom := os.Args[1]
+	romPath := os.Args[1]
 	c = chip8.New()
 	c.Logging = false
-	err = c.Load(fmt.Sprintf("../../static/roms/%v", rom))
+	err = c.Load(romPath)
 	if err != nil {
-		log.Fatalf("Could not find rom %v", rom)
+		log.Fatalf("Could not find rom %v", romPath)
 	}
 
 	keyEvents := make(chan termbox.Event)
