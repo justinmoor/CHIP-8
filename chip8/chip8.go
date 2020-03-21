@@ -26,6 +26,7 @@ var KeyMap = map[string]uint8{
 
 type CHIP8 struct {
 	cpu
+	memory     [4096]byte          // RAM
 	Gfx        [Width][Height]byte // display buffer
 	keys       [16]byte            // current key state
 	DrawFlag   bool
@@ -37,7 +38,6 @@ type CHIP8 struct {
 
 type cpu struct {
 	opcode uint16     // opcode is 2 bytes
-	memory [4096]byte // RAM
 	v      [16]byte   // CPU registers
 	i      uint16     // index register
 	pc     uint16     // program counter
